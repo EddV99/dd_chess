@@ -3,7 +3,11 @@ project(dd_chess VERSION 0.0)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(dd_chess src/main.c)
+add_executable(
+  dd_chess 
+  src/main.c
+  src/board/board.c
+)
 
 target_compile_options(
   dd_chess PRIVATE 
