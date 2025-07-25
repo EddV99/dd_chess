@@ -1,0 +1,4 @@
+BasedOnStyle: LLVM
+
+# Custom Settings
+ColumnLimit: 120
