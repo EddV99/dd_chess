@@ -21,7 +21,7 @@
 
 typedef struct {
   uint8_t is_white_turn;
-  uint64_t sequential_reversible_moves;
+  uint32_t sequential_reversible_moves;
   // First two bits are white side.
   //
   // Next two bits are black side.
@@ -55,5 +55,7 @@ typedef struct {
 
 #define rank_file_to_x88_coord(rank, file) 16 * rank + file
 #define is_invalid_move(rank, file) rank_file_to_x88_coord(rank, file) & 0x88
+
+Board create_new_board();
 
 #endif
