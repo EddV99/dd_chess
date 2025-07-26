@@ -3,4 +3,10 @@
 
 #include "board.h"
 
+typedef struct {
+  // TODO: Implement
+  // Maybe move chess rules here instead in the board representation?
+  // Stuff like en passant, castle rights, 50 move rule, ...
+} move_generator_t;
+
 #endif
