@@ -7,6 +7,7 @@ add_executable(
   dd_chess 
   src/main.c
   src/board/board.c
+  src/move_generator/move_generator.c
 )
 
 target_compile_options(
@@ -15,4 +16,8 @@ target_compile_options(
   $<$<CXX_COMPILER_ID:MSVC>: /WX /W4>
 )
 
+target_include_directories (
+  dd_chess PRIVATE
+  src/board
+)
 
