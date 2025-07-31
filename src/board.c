@@ -1,3 +1,4 @@
+#include "common.h"
 #include "board.h"
 
 board_t create_new_board() {

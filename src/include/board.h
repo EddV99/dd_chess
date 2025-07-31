@@ -3,20 +3,6 @@
 
 #include <stdint.h>
 
-#define EMPTY ((uint8_t)0x0)
-#define WHITE_PAWN ((uint8_t)0x1)
-#define WHITE_KNIGHT ((uint8_t)0x2)
-#define WHITE_BISHOP ((uint8_t)0x3)
-#define WHITE_ROOK ((uint8_t)0x4)
-#define WHITE_QUEEN ((uint8_t)0x5)
-#define WHITE_KING ((uint8_t)0x6)
-#define BLACK_PAWN ((uint8_t)0x7)
-#define BLACK_KNIGHT ((uint8_t)0x8)
-#define BLACK_BISHOP ((uint8_t)0x9)
-#define BLACK_ROOK ((uint8_t)0xa)
-#define BLACK_QUEEN ((uint8_t)0xb)
-#define BLACK_KING ((uint8_t)0xc)
-
 #define MAILBOX_A1 ((uint8_t)0x00)
 #define MAILBOX_A2 ((uint8_t)0x10)
 #define MAILBOX_A3 ((uint8_t)0x20)
