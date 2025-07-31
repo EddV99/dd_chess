@@ -1,8 +1,8 @@
 #ifndef DD_MOVE_GENERATOR_H_
 #define DD_MOVE_GENERATOR_H_
 
-#include "common.h"
 #include "board.h"
+#include "common.h"
 #include <stdint.h>
 
 #define MOVE_CAPTURE_FLAG ((uint16_t)0x0001)

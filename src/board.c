@@ -1,5 +1,5 @@
-#include "common.h"
 #include "board.h"
+#include "common.h"
 
 board_t create_new_board() {
   board_t new_board = {.is_white_turn = true,
