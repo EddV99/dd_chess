@@ -3,71 +3,6 @@
 
 #include <stdint.h>
 
-#define MAILBOX_A1 ((uint8_t)0x00)
-#define MAILBOX_A2 ((uint8_t)0x10)
-#define MAILBOX_A3 ((uint8_t)0x20)
-#define MAILBOX_A4 ((uint8_t)0x30)
-#define MAILBOX_A5 ((uint8_t)0x40)
-#define MAILBOX_A6 ((uint8_t)0x50)
-#define MAILBOX_A7 ((uint8_t)0x60)
-#define MAILBOX_A8 ((uint8_t)0x70)
-#define MAILBOX_B1 ((uint8_t)0x01)
-#define MAILBOX_B2 ((uint8_t)0x11)
-#define MAILBOX_B3 ((uint8_t)0x21)
-#define MAILBOX_B4 ((uint8_t)0x31)
-#define MAILBOX_B5 ((uint8_t)0x41)
-#define MAILBOX_B6 ((uint8_t)0x51)
-#define MAILBOX_B7 ((uint8_t)0x61)
-#define MAILBOX_B8 ((uint8_t)0x71)
-#define MAILBOX_C1 ((uint8_t)0x02)
-#define MAILBOX_C2 ((uint8_t)0x12)
-#define MAILBOX_C3 ((uint8_t)0x22)
-#define MAILBOX_C4 ((uint8_t)0x32)
-#define MAILBOX_C5 ((uint8_t)0x42)
-#define MAILBOX_C6 ((uint8_t)0x52)
-#define MAILBOX_C7 ((uint8_t)0x62)
-#define MAILBOX_C8 ((uint8_t)0x72)
-#define MAILBOX_D1 ((uint8_t)0x03)
-#define MAILBOX_D2 ((uint8_t)0x13)
-#define MAILBOX_D3 ((uint8_t)0x23)
-#define MAILBOX_D4 ((uint8_t)0x33)
-#define MAILBOX_D5 ((uint8_t)0x43)
-#define MAILBOX_D6 ((uint8_t)0x53)
-#define MAILBOX_D7 ((uint8_t)0x63)
-#define MAILBOX_D8 ((uint8_t)0x73)
-#define MAILBOX_E1 ((uint8_t)0x04)
-#define MAILBOX_E2 ((uint8_t)0x14)
-#define MAILBOX_E3 ((uint8_t)0x24)
-#define MAILBOX_E4 ((uint8_t)0x34)
-#define MAILBOX_E5 ((uint8_t)0x44)
-#define MAILBOX_E6 ((uint8_t)0x54)
-#define MAILBOX_E7 ((uint8_t)0x64)
-#define MAILBOX_E8 ((uint8_t)0x74)
-#define MAILBOX_F1 ((uint8_t)0x05)
-#define MAILBOX_F2 ((uint8_t)0x15)
-#define MAILBOX_F3 ((uint8_t)0x25)
-#define MAILBOX_F4 ((uint8_t)0x35)
-#define MAILBOX_F5 ((uint8_t)0x45)
-#define MAILBOX_F6 ((uint8_t)0x55)
-#define MAILBOX_F7 ((uint8_t)0x65)
-#define MAILBOX_F8 ((uint8_t)0x75)
-#define MAILBOX_G1 ((uint8_t)0x06)
-#define MAILBOX_G2 ((uint8_t)0x16)
-#define MAILBOX_G3 ((uint8_t)0x26)
-#define MAILBOX_G4 ((uint8_t)0x36)
-#define MAILBOX_G5 ((uint8_t)0x46)
-#define MAILBOX_G6 ((uint8_t)0x56)
-#define MAILBOX_G7 ((uint8_t)0x66)
-#define MAILBOX_G8 ((uint8_t)0x76)
-#define MAILBOX_H1 ((uint8_t)0x07)
-#define MAILBOX_H2 ((uint8_t)0x17)
-#define MAILBOX_H3 ((uint8_t)0x27)
-#define MAILBOX_H4 ((uint8_t)0x37)
-#define MAILBOX_H5 ((uint8_t)0x47)
-#define MAILBOX_H6 ((uint8_t)0x57)
-#define MAILBOX_H7 ((uint8_t)0x67)
-#define MAILBOX_H8 ((uint8_t)0x77)
-
 #define BIT_A1 ((uint64_t)0x0000000000000080)
 #define BIT_A2 ((uint64_t)0x0000000000008000)
 #define BIT_A3 ((uint64_t)0x0000000000800000)
@@ -163,16 +98,7 @@ typedef struct {
   uint64_t black_bishops;
   uint64_t black_knights;
   uint64_t black_pawns;
-
-  // Mailbox (x88) representation
-  // note: this is redundant since we have the bit map, but for now try
-  // the hybrid solution as described here:
-  //  https://www.chessprogramming.org/Board_Representation
-  uint8_t squares[128];
 } board_t;
-
-#define rank_file_to_x88_coord(rank, file) 16 * rank + file
-#define is_invalid_move(rank, file) rank_file_to_x88_coord(rank, file) & 0x88
 
 board_t create_new_board();
 
