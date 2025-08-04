@@ -1,7 +1,10 @@
-#include <stdint.h>
+#include <stdio.h>
+#include "board.h"
 
 int main() {
-  int x = 0;
+  printf("dd_chess\n");  
 
-  return x;
+  board_t board = create_new_board();
+  print_board(board.black_pawns); 
+  return 0;
 }
