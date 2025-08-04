@@ -7,6 +7,7 @@ add_executable(
   dd_chess 
   src/main.c
   src/board.c
+  src/bitboard.c
   src/move_generator.c
 )
 

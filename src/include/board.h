@@ -1,6 +1,8 @@
 #ifndef DD_BOARD_H_
 #define DD_BOARD_H_
 
+#include "bitboard.h"
+
 #include <stdint.h>
 
 typedef struct {
@@ -21,21 +23,20 @@ typedef struct {
   // bit 16-23: rank 3
   // bit 8-15:  rank 2
   // bit 0-7:   rank 1
-  uint64_t white_king;
-  uint64_t white_queen;
-  uint64_t white_rooks;
-  uint64_t white_bishops;
-  uint64_t white_knights;
-  uint64_t white_pawns;
-  uint64_t black_king;
-  uint64_t black_queen;
-  uint64_t black_rooks;
-  uint64_t black_bishops;
-  uint64_t black_knights;
-  uint64_t black_pawns;
+  bitboard_t white_king;
+  bitboard_t white_queen;
+  bitboard_t white_rooks;
+  bitboard_t white_bishops;
+  bitboard_t white_knights;
+  bitboard_t white_pawns;
+  bitboard_t black_king;
+  bitboard_t black_queen;
+  bitboard_t black_rooks;
+  bitboard_t black_bishops;
+  bitboard_t black_knights;
+  bitboard_t black_pawns;
 } board_t;
 
 board_t create_new_board();
-void print_board(uint64_t bitboard);
 
 #endif
