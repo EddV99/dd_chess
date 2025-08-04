@@ -4,7 +4,9 @@
 #include <stdint.h>
 
 #define square_mask(square) (1ULL << square)
-#define get_bit(bitboard, square) bitboard &square_mask(square)
+#define get_bit(bitboard, square) (bitboard & square_mask(square))
+#define set_bit(bitboard, square) (bitboard |= square_mask(square))
+#define unset_bit(bitboard, square) (bitboard &= ~square_mask(square))
 
 typedef uint64_t bitboard_t;
 
