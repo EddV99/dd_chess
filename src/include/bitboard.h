@@ -9,6 +9,20 @@
 #define unset_bit(bitboard, square) (bitboard &= ~square_mask(square))
 #define toggle_bit(bitboard, square) (bitboard ^= square_mask(square))
 
+/*
+ * Use 64 bits to represent a board. Layout of bits is as shown below:
+ *  
+ * 8  (MSB) 0 0 0 0 0 0 0 0 
+ * 7        0 0 0 0 0 0 0 0 
+ * 6        0 0 0 0 0 0 0 0 
+ * 5        0 0 0 0 0 0 0 0 
+ * 4        0 0 0 0 0 0 0 0 
+ * 3        0 0 0 0 0 0 0 0 
+ * 2        0 0 0 0 0 0 0 0 
+ * 1        0 0 0 0 0 0 0 0 (LSB)
+ *
+ *          A B C D E F G H
+ */
 typedef uint64_t bitboard_t;
 
 void print_board(bitboard_t bitboard);

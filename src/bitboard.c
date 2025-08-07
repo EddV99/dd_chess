@@ -8,9 +8,9 @@ void print_board(bitboard_t bitboard) {
       printf("%d  ", rank + 1);
     else
       printf("\n%d  ", rank + 1);
-    for (int file = 0; file < 8; file++) {
+    for (int file = 7; file >= 0; file--) {
       printf("%d ", (bitboard & (1ULL << ((rank * 8) + file))) ? 1 : 0);
     }
   }
-  printf("\n\n   A B C D E F G H \n");
+  printf("\n\n   A B C D E F G H \n\n");
 }
