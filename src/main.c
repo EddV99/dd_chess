@@ -10,6 +10,7 @@ int main() {
 
   generate_pawn_attacks();
   print_board(pawn_attacks[WHITE][G4]);
+  print_board(pawn_attacks[BLACK][G4]);
 
   return 0;
 }
