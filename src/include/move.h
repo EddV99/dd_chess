@@ -2,6 +2,7 @@
 #define DD_MOVE_H_
 
 #include "common.h"
+#include <stdint.h>
 
 #define MOVE_CAPTURE_FLAG ((uint16_t)0x0001)
 #define MOVE_PROMOTION_KNIGHT_FLAG ((uint16_t)0x0002)
@@ -15,5 +16,11 @@ typedef struct {
   square_t target;
   uint8_t flags;
 } move_t;
+
+/*
+ * Hold information about pawn attacks
+ * pawn_attacks[side][square];
+ */
+uint64_t pawn_attacks[2][64];
 
 #endif
