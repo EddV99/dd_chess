@@ -1,6 +1,8 @@
 #ifndef DD_COMMON_H_
 #define DD_COMMON_H_
 
+#define SQUARE_COUNT 64
+
 typedef enum {
   EMPTY,
   PAWN,

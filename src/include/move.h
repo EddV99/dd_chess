@@ -17,10 +17,4 @@ typedef struct {
   uint8_t flags;
 } move_t;
 
-/*
- * Hold information about pawn attacks
- * pawn_attacks[side][square];
- */
-uint64_t pawn_attacks[2][64];
-
 #endif

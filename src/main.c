@@ -1,14 +1,15 @@
 #include "bitboard.h"
 #include "board.h"
+#include "common.h"
+#include "move_generator.h"
 
 #include <stdio.h>
 
 int main() {
   printf("dd_chess\n");
 
-  board_t board = create_new_board();
-
-  print_board(board.black_pawns);
+  generate_pawn_attacks();
+  print_board(pawn_attacks[WHITE][G4]);
 
   return 0;
 }
