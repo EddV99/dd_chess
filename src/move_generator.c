@@ -6,23 +6,39 @@
 bitboard_t pawn_attacks[2][SQUARE_COUNT] = {0};
 
 void generate_pawn_attacks() {
-  const bitboard_t NOT_A_FILE = 0x7f7f7f7f7f7f7f7f;
-  const bitboard_t NOT_H_FILE = 0xfefefefefefefefe;
-
   for (int i = 0; i < SQUARE_COUNT; i++) {
     bitboard_t board = 0;
     set_bit(board, i);
 
-    bitboard_t board_west = board;
-    bitboard_t board_east = board;
-    board_west = (board << 9) & NOT_H_FILE;
-    board_east = (board << 7) & NOT_A_FILE;
-    pawn_attacks[WHITE][i] = board_west | board_east;
+    bitboard_t attacks = (board << 9) & NOT_H_FILE;
+    attacks |= (board << 7) & NOT_A_FILE;
+    pawn_attacks[WHITE][i] = attacks;
 
-    board_west = board;
-    board_east = board;
-    board_west = (board >> 7) & NOT_H_FILE;
-    board_east = (board >> 9) & NOT_A_FILE;
-    pawn_attacks[BLACK][i] = board_west | board_east;
+    attacks = (board >> 7) & NOT_H_FILE;
+    attacks |= (board >> 9) & NOT_A_FILE;
+    pawn_attacks[BLACK][i] = attacks;
+  }
+}
+
+bitboard_t knight_attacks[SQUARE_COUNT] = {0};
+
+void generate_knight_attacks() {
+  for (int i = 0; i < SQUARE_COUNT; i++) {
+    bitboard_t board = 0;
+    set_bit(board, i);
+
+    // west side attacks
+    bitboard_t attacks = (board >> 6) & NOT_GH_FILE;
+    attacks |= (board << 10) & NOT_GH_FILE;
+    attacks |= (board >> 15) & NOT_H_FILE;
+    attacks |= (board << 17) & NOT_H_FILE;
+
+    // east side attacks
+    attacks |= (board << 6) & NOT_AB_FILE;
+    attacks |= (board >> 10) & NOT_AB_FILE;
+    attacks |= (board << 15) & NOT_A_FILE;
+    attacks |= (board >> 17) & NOT_A_FILE;
+
+    knight_attacks[i] = attacks;
   }
 }
