@@ -21,8 +21,8 @@ void generate_pawn_attacks() {
 
     board_west = board;
     board_east = board;
-    board_west = (board >> 9) & NOT_A_FILE;
-    board_east = (board >> 7) & NOT_H_FILE;
+    board_west = (board >> 7) & NOT_H_FILE;
+    board_east = (board >> 9) & NOT_A_FILE;
     pawn_attacks[BLACK][i] = board_west | board_east;
   }
 }
