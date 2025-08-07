@@ -19,10 +19,18 @@ void generate_pawn_attacks();
 
 /*
  * Hold information about knight attacks
- * knight_attacks[color][square];
+ * knight_attacks[square];
  */
 extern bitboard_t knight_attacks[SQUARE_COUNT];
 
 void generate_knight_attacks();
+
+/*
+ * Hold information about king attacks
+ * king_attacks[square];
+ */
+extern bitboard_t king_attacks[SQUARE_COUNT];
+
+void generate_king_attacks();
 
 #endif

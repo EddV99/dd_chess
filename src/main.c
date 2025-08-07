@@ -10,7 +10,8 @@ int main() {
 
   generate_pawn_attacks();
   generate_knight_attacks();
-  print_board(knight_attacks[A8]);
+  generate_king_attacks();
+  print_board(king_attacks[D8]);
 
   return 0;
 }

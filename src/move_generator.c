@@ -42,3 +42,23 @@ void generate_knight_attacks() {
     knight_attacks[i] = attacks;
   }
 }
+
+bitboard_t king_attacks[SQUARE_COUNT] = {0};
+
+void generate_king_attacks() {
+  for (int i = 0; i < SQUARE_COUNT; i++) {
+    bitboard_t board = 0;
+    set_bit(board, i);
+
+    bitboard_t attacks = (board << 1) & NOT_H_FILE;
+    attacks |= (board << 9) & NOT_H_FILE;
+    attacks |= (board << 8);
+    attacks |= (board << 7) & NOT_A_FILE;
+    attacks |= (board >> 1) & NOT_A_FILE;
+    attacks |= (board >> 9) & NOT_A_FILE;
+    attacks |= (board >> 8);
+    attacks |= (board >> 7) & NOT_H_FILE;
+
+    king_attacks[i] = attacks;
+  }
+}
