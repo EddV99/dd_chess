@@ -24,4 +24,6 @@ typedef enum {
 } square_t;
 // clang-format on
 
+typedef enum { WHITE, BLACK } piece_color_t;
+
 #endif
