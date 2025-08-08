@@ -30,4 +30,8 @@ typedef enum {
 
 typedef enum { WHITE, BLACK } piece_color_t;
 
+typedef enum { H, G, F, E, D, C, B, A } file_t;
+
+typedef enum { ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT } rank_t;
+
 #endif

@@ -8,6 +8,7 @@
 #define set_bit(bitboard, square) (bitboard |= square_mask(square))
 #define unset_bit(bitboard, square) (bitboard &= ~square_mask(square))
 #define toggle_bit(bitboard, square) (bitboard ^= square_mask(square))
+#define file_rank_to_square(file, rank) ((rank * 8) + file)
 
 /*
  * Use 64 bits to represent a board. Layout of bits is as shown below:
@@ -26,5 +27,6 @@
 typedef uint64_t bitboard_t;
 
 void print_board(bitboard_t bitboard);
+int population_count(bitboard_t bitboard);
 
 #endif

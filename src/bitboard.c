@@ -14,3 +14,12 @@ void print_board(bitboard_t bitboard) {
   }
   printf("\n\n   A B C D E F G H \n\n");
 }
+
+int population_count(bitboard_t bitboard) {
+  int count = 0;
+  while (bitboard) {
+    count++;
+    bitboard &= bitboard - 1;
+  }
+  return count;
+}
