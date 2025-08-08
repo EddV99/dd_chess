@@ -11,7 +11,7 @@ int main() {
   generate_pawn_attacks();
   generate_knight_attacks();
   generate_king_attacks();
-  print_board(king_attacks[D8]);
 
+  print_board(rook_occupancy(A8));
   return 0;
 }

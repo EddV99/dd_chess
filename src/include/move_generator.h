@@ -33,4 +33,5 @@ extern bitboard_t king_attacks[SQUARE_COUNT];
 
 void generate_king_attacks();
 
+bitboard_t rook_occupancy(square_t square);
 #endif

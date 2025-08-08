@@ -62,3 +62,20 @@ void generate_king_attacks() {
     king_attacks[i] = attacks;
   }
 }
+
+bitboard_t rook_occupancy(square_t square) {
+  bitboard_t result = 0ULL;
+  int rank = square / 8;
+  int file = square % 8;
+  for (int r = rank + 1; r < 7; r++)
+    set_bit(result, file_rank_to_square(file, r));
+  for (int r = rank - 1; r > 0; r--)
+    set_bit(result, file_rank_to_square(file, r));
+  for (int f = file + 1; f < 7; f++)
+    set_bit(result, file_rank_to_square(f, rank));
+  for (int f = file - 1; f > 0; f--)
+    set_bit(result, file_rank_to_square(f, rank));
+
+  return result;
+}
+
