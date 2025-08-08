@@ -33,5 +33,16 @@ extern bitboard_t king_attacks[SQUARE_COUNT];
 
 void generate_king_attacks();
 
+typedef struct {
+  bitboard_t mask;
+  uint64_t magic_number;
+  uint8_t index_bits;
+} magic_t;
+
+#define MAGIC_INDEX(magic, blockers) (((blockers & magic.mask) * magic.magic_number) >> (64U - magic.index_bits))
+
 bitboard_t rook_occupancy(square_t square);
+void get_rook_moves(magic_t magic, bitboard_t blockers);
+
+bitboard_t bishop_occupancy(square_t square);
 #endif
