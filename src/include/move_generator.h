@@ -42,7 +42,10 @@ typedef struct {
 #define MAGIC_INDEX(magic, blockers) (((blockers & magic.mask) * magic.magic_number) >> (64U - magic.index_bits))
 
 bitboard_t rook_occupancy(square_t square);
+bitboard_t generate_rook_attack(square_t square, bitboard_t blockers);
 void get_rook_moves(magic_t magic, bitboard_t blockers);
 
 bitboard_t bishop_occupancy(square_t square);
+bitboard_t generate_bishop_attack(square_t square, bitboard_t blockers);
+void get_bishop_moves(magic_t magic, bitboard_t blockers);
 #endif

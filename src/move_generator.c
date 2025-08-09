@@ -96,3 +96,59 @@ bitboard_t bishop_occupancy(square_t square) {
     set_bit(result, file_rank_to_square(f, r));
   return result;
 }
+
+bitboard_t generate_bishop_attack(square_t square, bitboard_t blockers) {
+  bitboard_t result = 0ULL;
+  int rank = square / 8;
+  int file = square % 8;
+  int r, f;
+  for (r = rank + 1, f = file + 1; r <= 7 && f <= 7; r++, f++) {
+    set_bit(result, file_rank_to_square(f, r));
+    if (square_mask(file_rank_to_square(f, r)) & blockers)
+      break;
+  }
+  for (r = rank + 1, f = file - 1; r <= 7 && f >= 0; r++, f--) {
+    set_bit(result, file_rank_to_square(f, r));
+    if (square_mask(file_rank_to_square(f, r)) & blockers)
+      break;
+  }
+  for (r = rank - 1, f = file + 1; r >= 0 && f <= 7; r--, f++) {
+    set_bit(result, file_rank_to_square(f, r));
+    if (square_mask(file_rank_to_square(f, r)) & blockers)
+      break;
+  }
+  for (r = rank - 1, f = file - 1; r >= 0 && f >= 0; r--, f--) {
+    set_bit(result, file_rank_to_square(f, r));
+    if (square_mask(file_rank_to_square(f, r)) & blockers)
+      break;
+  }
+  return result;
+}
+
+bitboard_t generate_rook_attack(square_t square, bitboard_t blockers) {
+  bitboard_t result = 0ULL;
+  int rank = square / 8;
+  int file = square % 8;
+  int r, f;
+  for (r = rank + 1; r <= 7; r++) {
+    set_bit(result, file_rank_to_square(file, r));
+    if (square_mask(file_rank_to_square(file, r)) & blockers)
+      break;
+  }
+  for (r = rank - 1; r >= 0; r--) {
+    set_bit(result, file_rank_to_square(file, r));
+    if (square_mask(file_rank_to_square(file, r)) & blockers)
+      break;
+  }
+  for (f = file + 1; f <= 7; f++) {
+    set_bit(result, file_rank_to_square(f, rank));
+    if (square_mask(file_rank_to_square(f, rank)) & blockers)
+      break;
+  }
+  for (f = file - 1; f >= 0; f--) {
+    set_bit(result, file_rank_to_square(f, rank));
+    if (square_mask(file_rank_to_square(f, rank)) & blockers)
+      break;
+  }
+  return result;
+}
