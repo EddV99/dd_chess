@@ -8,7 +8,7 @@
 int main() {
   printf("dd_chess\n");
   bitboard_t board = 0;
-  printf("%d", population_count(board));
+  printf("%d", least_significant_one_bit(board));
 
   return 0;
 }
