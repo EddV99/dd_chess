@@ -7,6 +7,6 @@
 
 int main() {
   printf("dd_chess\n");
-  
+
   return 0;
 }
