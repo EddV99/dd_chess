@@ -9,6 +9,7 @@ add_executable(
   src/board.c
   src/bitboard.c
   src/move_generator.c
+  src/prng.c
 )
 
 target_compile_options(

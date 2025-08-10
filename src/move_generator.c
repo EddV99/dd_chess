@@ -63,16 +63,10 @@ void generate_king_attacks() {
   }
 }
 
-const int rook_occupancy_count[SQUARE_COUNT] = { 
-  12, 11, 11, 11, 11, 11, 11, 12,
-  11, 10, 10, 10, 10, 10, 10, 11,
-  11, 10, 10, 10, 10, 10, 10, 11,
-  11, 10, 10, 10, 10, 10, 10, 11,
-  11, 10, 10, 10, 10, 10, 10, 11,
-  11, 10, 10, 10, 10, 10, 10, 11,
-  11, 10, 10, 10, 10, 10, 10, 11,
-  12, 11, 11, 11, 11, 11, 11, 12
-};
+const int rook_occupancy_count[SQUARE_COUNT] = {12, 11, 11, 11, 11, 11, 11, 12, 11, 10, 10, 10, 10, 10, 10, 11,
+                                                11, 10, 10, 10, 10, 10, 10, 11, 11, 10, 10, 10, 10, 10, 10, 11,
+                                                11, 10, 10, 10, 10, 10, 10, 11, 11, 10, 10, 10, 10, 10, 10, 11,
+                                                11, 10, 10, 10, 10, 10, 10, 11, 12, 11, 11, 11, 11, 11, 11, 12};
 
 bitboard_t rook_occupancy(square_t square) {
   bitboard_t result = 0ULL;
@@ -92,16 +86,9 @@ bitboard_t rook_occupancy(square_t square) {
 
 void get_rook_moves(magic_t magic, bitboard_t blockers) {}
 
-const int bishop_occupancy_count[SQUARE_COUNT] = {
-  6, 5, 5, 5, 5, 5, 5, 6,
-  5, 5, 5, 5, 5, 5, 5, 5,
-  5, 5, 7, 7, 7, 7, 5, 5,
-  5, 5, 7, 9, 9, 7, 5, 5,
-  5, 5, 7, 9, 9, 7, 5, 5,
-  5, 5, 7, 7, 7, 7, 5, 5,
-  5, 5, 5, 5, 5, 5, 5, 5,
-  6, 5, 5, 5, 5, 5, 5, 6
-};
+const int bishop_occupancy_count[SQUARE_COUNT] = {6, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7,
+                                                  5, 5, 5, 5, 7, 9, 9, 7, 5, 5, 5, 5, 7, 9, 9, 7, 5, 5, 5, 5, 7, 7,
+                                                  7, 7, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 5, 6};
 
 bitboard_t bishop_occupancy(square_t square) {
   bitboard_t result = 0ULL;
@@ -177,12 +164,12 @@ bitboard_t generate_rook_attack(square_t square, bitboard_t blockers) {
 
 bitboard_t set_occupancy(int index, int bit_count, bitboard_t attack_mask) {
   bitboard_t occupancy = 0ULL;
-  
-  for(int i = 0; i < bit_count; i++){
-    square_t square = least_significant_one_bit(attack_mask); 
+
+  for (int i = 0; i < bit_count; i++) {
+    square_t square = least_significant_one_bit(attack_mask);
     unset_bit(attack_mask, square);
 
-    if(index & (1 << i)){
+    if (index & (1 << i)) {
       occupancy |= (1ULL << square);
     }
   }
