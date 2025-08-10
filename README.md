@@ -12,3 +12,4 @@ Some chess engine for C practice.
 
 ## Sources
 - [chessprogramming.org](https://www.chessprogramming.org)
+- [Chess Engine in C - YT Series by Code Monkey King](https://youtube.com/playlist?list=PLmN0neTso3Jxh8ZIylk74JpwfiWNI76Cs&si=nluUchqGlBE-aARU)
