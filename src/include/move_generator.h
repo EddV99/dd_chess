@@ -48,4 +48,6 @@ void get_rook_moves(magic_t magic, bitboard_t blockers);
 bitboard_t bishop_occupancy(square_t square);
 bitboard_t generate_bishop_attack(square_t square, bitboard_t blockers);
 void get_bishop_moves(magic_t magic, bitboard_t blockers);
+
+bitboard_t set_occupancy(int index, int bit_count, bitboard_t attack_mask);
 #endif

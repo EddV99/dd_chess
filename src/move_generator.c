@@ -152,3 +152,18 @@ bitboard_t generate_rook_attack(square_t square, bitboard_t blockers) {
   }
   return result;
 }
+
+bitboard_t set_occupancy(int index, int bit_count, bitboard_t attack_mask) {
+  bitboard_t occupancy = 0ULL;
+  
+  for(int i = 0; i < bit_count; i++){
+    square_t square = least_significant_one_bit(attack_mask); 
+    unset_bit(attack_mask, square);
+
+    if(index & (1 << i)){
+      occupancy |= (1ULL << square);
+    }
+  }
+
+  return occupancy;
+}

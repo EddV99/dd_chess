@@ -35,5 +35,5 @@ static const int lsb_index[64] = {0,  47, 1,  56, 48, 27, 2,  60, 57, 49, 41, 37
 /**
  * @author Kim Walisch (2012)
  */
-int least_significant_one_bit(uint64_t bitboard);
+int least_significant_one_bit(bitboard_t bitboard);
 #endif

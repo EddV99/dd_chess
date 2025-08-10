@@ -24,7 +24,7 @@ int population_count(bitboard_t bitboard) {
   return count;
 }
 
-int least_significant_one_bit(uint64_t bitboard) {
+int least_significant_one_bit(bitboard_t bitboard) {
   if (!bitboard)
     return -1;
   const uint64_t debruijn = 0x03f79d71b4cb0a89;
