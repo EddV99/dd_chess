@@ -16,6 +16,7 @@ bitboard_t generate_bishop_attack(square_t square, bitboard_t blockers);
 bitboard_t set_occupancy(int index, int bit_count, bitboard_t attack_mask);
 
 bitboard_t generate_magic_number(prng_t *prng);
-bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece);
+bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece, prng_t* prng);
+void init_magic();
 
 #endif

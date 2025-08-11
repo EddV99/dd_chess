@@ -2,6 +2,7 @@
 #include "prng.h"
 
 #include <string.h>
+#include <stdio.h>
 
 const int rook_occupancy_count[SQUARE_COUNT] = {12, 11, 11, 11, 11, 11, 11, 12, 11, 10, 10, 10, 10, 10, 10, 11,
                                                 11, 10, 10, 10, 10, 10, 10, 11, 11, 10, 10, 10, 10, 10, 10, 11,
@@ -119,7 +120,7 @@ bitboard_t generate_magic_number(prng_t *prng) {
   return get_random_number_u64(prng) & get_random_number_u64(prng) & get_random_number_u64(prng);
 }
 
-bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece) {
+bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece, prng_t* prng) {
   if (piece != ROOK && piece != BISHOP)
     return -1;
   int is_bishop = piece == BISHOP;
@@ -135,9 +136,8 @@ bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece) {
         is_bishop ? generate_bishop_attack(square, occupancies[i]) : generate_rook_attack(square, occupancies[i]);
   }
 
-  prng_t prng = create_random_generator();
   for (int i = 0; i < 100000000; i++) {
-    bitboard_t magic_number = generate_magic_number(&prng);
+    bitboard_t magic_number = generate_magic_number(prng);
     if (population_count((attack_mask * magic_number) & 0xFF00000000000000) < 6)
       continue;
     memset(used_attacks, 0ULL, sizeof(used_attacks));
@@ -156,4 +156,17 @@ bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece) {
     }
   }
   return 0ULL;
+}
+
+void init_magic() {
+  prng_t prng = create_random_generator();
+  printf("\n============== Rook Magic Numbers ==============\n");
+  for (int i = 0; i < SQUARE_COUNT; i++) {
+    printf("0x%llxULL\n", find_magic_number(i, rook_occupancy_count[i], ROOK, &prng));
+  }
+  printf("\n============== Bishop Magic Numbers ==============\n");
+  for (int i = 0; i < SQUARE_COUNT; i++) {
+    printf("0x%llxULL\n", find_magic_number(i, bishop_occupancy_count[i], BISHOP, &prng));
+  }
+
 }
