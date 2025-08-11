@@ -3,6 +3,7 @@
 
 #include "bitboard.h"
 #include "common.h"
+#include "prng.h"
 
 #define NOT_A_FILE (0x7f7f7f7f7f7f7f7fULL)
 #define NOT_H_FILE (0xfefefefefefefefeULL)
@@ -33,23 +34,4 @@ extern bitboard_t king_attacks[SQUARE_COUNT];
 
 void generate_king_attacks();
 
-typedef struct {
-  bitboard_t mask;
-  uint64_t magic_number;
-  uint8_t index_bits;
-} magic_t;
-
-#define MAGIC_INDEX(magic, blockers) (((blockers & magic.mask) * magic.magic_number) >> (64U - magic.index_bits))
-
-extern const int rook_occupancy_count[SQUARE_COUNT];
-bitboard_t rook_occupancy(square_t square);
-bitboard_t generate_rook_attack(square_t square, bitboard_t blockers);
-void get_rook_moves(magic_t magic, bitboard_t blockers);
-
-extern const int bishop_occupancy_count[SQUARE_COUNT];
-bitboard_t bishop_occupancy(square_t square);
-bitboard_t generate_bishop_attack(square_t square, bitboard_t blockers);
-void get_bishop_moves(magic_t magic, bitboard_t blockers);
-
-bitboard_t set_occupancy(int index, int bit_count, bitboard_t attack_mask);
 #endif

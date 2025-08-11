@@ -8,6 +8,7 @@ add_executable(
   src/main.c
   src/board.c
   src/bitboard.c
+  src/magic.c
   src/move_generator.c
   src/prng.c
 )

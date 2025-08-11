@@ -11,6 +11,7 @@ typedef struct {
 
 prng_t create_random_generator();
 
-uint32_t get_random_number(prng_t *prng);
+uint64_t get_random_number_u64(prng_t *prng);
+uint32_t get_random_number_u32(prng_t *prng);
 
 #endif

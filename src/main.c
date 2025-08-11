@@ -1,19 +1,20 @@
 #include "bitboard.h"
 #include "board.h"
 #include "common.h"
+#include "magic.h"
 #include "move_generator.h"
 #include "prng.h"
 
+#include <stdint.h>
 #include <stdio.h>
 
 int main() {
   printf("dd_chess\n");
 
-  prng_t prng = create_random_generator();
-
-  for (int i = 0; i < 100; i++) {
-    printf("%d. %u\n", i, get_random_number(&prng));
+  for (int i = 0; i < SQUARE_COUNT; i++) {
+    printf("0x%016llxULL\n", find_magic_number(i, rook_occupancy_count[i], ROOK), 16);
   }
+  // printf("0x%llx\n", find_magic_number(i, bishop_occupancy_count[i], BISHOP));
 
   return 0;
 }
