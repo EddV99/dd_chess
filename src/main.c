@@ -10,6 +10,5 @@
 
 int main() {
   printf("dd_chess\n");
-  init_magic();
   return 0;
 }
