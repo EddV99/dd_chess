@@ -19,7 +19,7 @@ bitboard_t generate_magic_number(prng_t *prng);
 bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece, prng_t *prng);
 void init_magic();
 
-extern const bitboard_t rook_magics[64];
-extern const bitboard_t bishop_magics[64];
+extern const bitboard_t ROOK_MAGICS[64];
+extern const bitboard_t BISHOP_MAGICS[64];
 
 #endif

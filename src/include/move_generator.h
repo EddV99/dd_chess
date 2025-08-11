@@ -34,4 +34,16 @@ extern bitboard_t king_attacks[SQUARE_COUNT];
 
 void generate_king_attacks();
 
+extern uint64_t bishop_attack_masks[64];
+extern uint64_t bishop_attacks[SQUARE_COUNT][512];
+
+extern uint64_t rook_attack_masks[64];
+extern uint64_t rook_attacks[SQUARE_COUNT][4096];
+
+void generate_slider_attacks();
+
+bitboard_t get_bishop_attacks(square_t square, bitboard_t occupancy);
+bitboard_t get_rook_attacks(square_t square, bitboard_t occupancy);
+
+void init_attacks();
 #endif
