@@ -44,6 +44,7 @@ void generate_slider_attacks();
 
 bitboard_t get_bishop_attacks(square_t square, bitboard_t occupancy);
 bitboard_t get_rook_attacks(square_t square, bitboard_t occupancy);
+bitboard_t get_queen_attacks(square_t square, bitboard_t occupancy);
 
 void init_attacks();
 #endif

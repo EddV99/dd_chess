@@ -107,6 +107,9 @@ bitboard_t get_rook_attacks(square_t square, bitboard_t occupancy) {
   occupancy >>= 64 - rook_occupancy_count[square];
   return rook_attacks[square][occupancy];
 }
+bitboard_t get_queen_attacks(square_t square, bitboard_t occupancy) {
+  return get_rook_attacks(square, occupancy) | get_bishop_attacks(square, occupancy);
+}
 
 void init_attacks() {
   generate_pawn_attacks();
