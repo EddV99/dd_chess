@@ -4,17 +4,23 @@
 #include "common.h"
 #include <stdint.h>
 
-#define MOVE_CAPTURE_FLAG ((uint16_t)0x0001)
-#define MOVE_PROMOTION_KNIGHT_FLAG ((uint16_t)0x0002)
-#define MOVE_PROMOTION_BISHOP_FLAG ((uint16_t)0x0004)
-#define MOVE_PROMOTION_ROOK_FLAG ((uint16_t)0x0008)
-#define MOVE_PROMOTION_QUEEN_FLAG ((uint16_t)0x0010)
-#define MOVE_EN_PASSANT_FLAG ((uint16_t)0x0020)
+#define set_move_capture(move) (move |= (1 << 12))
+#define set_move_promotion(move) (move |= (1 << 13))
+#define set_move_en_passant(move) (move |= (1 << 14))
+#define set_move_from(move, square) (move = (move & 0b1111111111000000) | ((uint16_t)square))
+#define set_move_to(move, square) (move = (move & 0b1111000000111111) | ((uint16_t)square) << 6)
 
-typedef struct {
-  square_t from;
-  square_t target;
-  uint8_t flags;
-} move_t;
+#define get_move_capture(move) (move & (1 << 12))
+#define get_move_promotion(move) (move & (1 << 13))
+#define get_move_en_passant(move) (move & (1 << 14))
+#define get_move_from(move) ((square_t)(move & 0b0000000000111111))
+#define get_move_to(move) ((square_t)((move & 0b0000111111000000) >> 6))
+
+/*
+ * 16 bits needed to represent a move.
+ * en passant  promotion  capture  to        from
+ * [14]        [13]       [12]     [11 - 6]  [5 - 0]
+ */
+typedef uint16_t move_t;
 
 #endif
