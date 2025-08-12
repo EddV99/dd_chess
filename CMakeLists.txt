@@ -6,6 +6,7 @@ set(CMAKE_BUILD_TYPE Debug)
 add_executable(
   dd_chess 
   src/main.c
+  src/attack.c
   src/board.c
   src/bitboard.c
   src/magic.c
