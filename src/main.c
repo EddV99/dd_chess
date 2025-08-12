@@ -1,9 +1,9 @@
+#include "attack.h"
 #include "bitboard.h"
 #include "board.h"
 #include "common.h"
 #include "magic.h"
 #include "move_generator.h"
-#include "attack.h"
 #include "prng.h"
 
 #include <stdint.h>

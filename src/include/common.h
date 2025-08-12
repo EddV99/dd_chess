@@ -4,7 +4,7 @@
 #define SQUARE_COUNT 64
 
 typedef enum {
-  EMPTY,
+  EMPTY = -1,
   PAWN,
   KNIGHT,
   BISHOP,
