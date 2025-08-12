@@ -17,7 +17,9 @@ typedef struct {
   // bit 4: castle rights for black queen side
   uint8_t castle_rights;
 
-  bitboard_t bitboards[12];
+  bitboard_t piece_bitboards[12];
+  bitboard_t black_pieces;
+  bitboard_t white_pieces;
 } board_t;
 
 board_t create_new_board();
