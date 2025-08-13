@@ -13,11 +13,7 @@ int main() {
   printf("dd_chess\n");
   init_attacks();
   board_t board = create_new_board();
-  print_board(board.black_pieces);
-  unset_least_significant_one_bit(board.black_pieces);
-  print_board(board.black_pieces);
-  unset_least_significant_one_bit(board.black_pieces);
-  print_board(board.black_pieces);
+  generate_pseudo_legal_pawn_moves(&board, (void *)0);
 
   return 0;
 }

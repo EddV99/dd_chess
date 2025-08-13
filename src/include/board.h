@@ -19,6 +19,7 @@ typedef struct {
 
   bitboard_t piece_bitboards[12];
   bitboard_t all_pieces;
+  bitboard_t en_passant;
   bitboard_t black_pieces;
   bitboard_t white_pieces;
 } board_t;

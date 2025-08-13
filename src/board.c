@@ -31,6 +31,7 @@ board_t create_new_board() {
                       square_mask(C7) | square_mask(D7) | square_mask(E7) | square_mask(F7) | square_mask(G7) |
                       square_mask(H7),
       .all_pieces = 0ULL,
+      .en_passant = 0ULL,
   };
   new_board.all_pieces = new_board.white_pieces | new_board.black_pieces;
   return new_board;
