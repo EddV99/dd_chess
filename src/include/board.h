@@ -18,6 +18,7 @@ typedef struct {
   uint8_t castle_rights;
 
   bitboard_t piece_bitboards[12];
+  bitboard_t all_pieces;
   bitboard_t black_pieces;
   bitboard_t white_pieces;
 } board_t;

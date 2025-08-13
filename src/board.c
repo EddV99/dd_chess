@@ -30,6 +30,8 @@ board_t create_new_board() {
                       square_mask(F8) | square_mask(G8) | square_mask(H8) | square_mask(A7) | square_mask(B7) |
                       square_mask(C7) | square_mask(D7) | square_mask(E7) | square_mask(F7) | square_mask(G7) |
                       square_mask(H7),
+      .all_pieces = 0ULL,
   };
+  new_board.all_pieces = new_board.white_pieces | new_board.black_pieces;
   return new_board;
 }
