@@ -5,11 +5,21 @@
 #include "board.h"
 #include <stdio.h>
 
-int generate_pseudo_legal_white_moves(board_t *board, move_t *moves) { return -1; }
+int generate_pseudo_legal_white_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->white_pieces);
+  return moves - tmp;
+}
 
-int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) { return -1; }
+int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->black_pieces);
+  return moves - tmp;
+}
 
 int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+
   bitboard_t white_pawns = board->piece_bitboards[INDEX_BITBOARD(WHITE, PAWN)];
   bitboard_t other_pieces = board->all_pieces & ~white_pawns;
 
@@ -39,10 +49,60 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves) {
     ADD_MOVE(moves, move);
   }
 
-  return -1;
+  while (white_pawns) {
+    square_t from = (square_t)least_significant_one_bit(white_pawns);
+    unset_least_significant_one_bit(white_pawns);
+    // TODO: implement en passant
+    bitboard_t attacks = pawn_attacks[WHITE][from] & (board->black_pieces | board->en_passant);
+
+    if (!attacks)
+      continue;
+    square_t attack_to = (square_t)least_significant_one_bit(attacks);
+    unset_least_significant_one_bit(attacks);
+    move_t move = 0;
+    set_move_from(move, from);
+    set_move_to(move, attack_to);
+    if (attack_to & RANK_8) {
+      set_move_promotion(move);
+    }
+    ADD_MOVE(moves, move);
+
+    if (!attacks)
+      continue;
+    attack_to = (square_t)least_significant_one_bit(attacks);
+    move = 0;
+    set_move_from(move, from);
+    set_move_to(move, attack_to);
+    if (attack_to & RANK_8) {
+      set_move_promotion(move);
+    }
+    ADD_MOVE(moves, move);
+  }
+
+  return moves - tmp;
 }
-int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves) { return -1; }
-int generate_pseudo_legal_bishop_moves(board_t *board, move_t *moves) { return -1; }
-int generate_pseudo_legal_rook_moves(board_t *board, move_t *moves) { return -1; }
-int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves) { return -1; }
-int generate_pseudo_legal_king_moves(board_t *board, move_t *moves) { return -1; }
+int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, KNIGHT)]);
+  return moves - tmp;
+}
+int generate_pseudo_legal_bishop_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, BISHOP)]);
+  return moves - tmp;
+}
+int generate_pseudo_legal_rook_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, ROOK)]);
+  return moves - tmp;
+}
+int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, QUEEN)]);
+  return moves - tmp;
+}
+int generate_pseudo_legal_king_moves(board_t *board, move_t *moves) {
+  move_t *tmp = moves;
+  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, KING)]);
+  return moves - tmp;
+}
