@@ -15,12 +15,14 @@ int generate_pseudo_legal_moves(board_t *board, move_t *moves) {
 int generate_pseudo_legal_white_moves(board_t *board, move_t *moves) {
   move_t *tmp = moves;
   moves += generate_pseudo_legal_white_pawn_moves(board, moves);
+  moves += generate_pseudo_legal_knight_moves(board, moves, WHITE, ~board->white_pieces);
   return moves - tmp;
 }
 
 int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) {
   move_t *tmp = moves;
   moves += generate_pseudo_legal_black_pawn_moves(board, moves);
+  moves += generate_pseudo_legal_knight_moves(board, moves, BLACK, ~board->black_pieces);
   return moves - tmp;
 }
 
@@ -72,6 +74,7 @@ int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves) {
     if (attack_to & RANK_8) {
       set_move_promotion(move);
     }
+    // TODO: set capture flag if needed
     add_move(moves, move);
 
     if (!attacks)
@@ -83,6 +86,7 @@ int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves) {
     if (attack_to & RANK_8) {
       set_move_promotion(move);
     }
+    // TODO: set capture flag if needed
     add_move(moves, move);
   }
 
@@ -137,6 +141,7 @@ int generate_pseudo_legal_black_pawn_moves(board_t *board, move_t *moves) {
     if (attack_to & RANK_1) {
       set_move_promotion(move);
     }
+    // TODO: set capture flag if needed
     add_move(moves, move);
 
     if (!attacks)
@@ -148,15 +153,34 @@ int generate_pseudo_legal_black_pawn_moves(board_t *board, move_t *moves) {
     if (attack_to & RANK_1) {
       set_move_promotion(move);
     }
+    // TODO: set capture flag if needed
     add_move(moves, move);
   }
 
   return moves - tmp;
 }
 
-int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves) {
+int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
-  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, KNIGHT)]);
+
+  bitboard_t knights = board->piece_bitboards[INDEX_BITBOARD(color, KNIGHT)];
+
+  while(knights) {
+    square_t from = (square_t)least_significant_one_bit(knights);
+    unset_least_significant_one_bit(knights);
+    
+    bitboard_t attacks = knight_attacks[from] & can_move_to_mask;
+    while(attacks) {
+      square_t to = (square_t)least_significant_one_bit(attacks);
+      unset_least_significant_one_bit(attacks);
+      move_t move = 0;
+      set_move_from(move, from);
+      set_move_to(move, to);
+      add_move(moves, move);
+      // TODO: set capture flag if needed
+    }
+  }
+
   return moves - tmp;
 }
 
