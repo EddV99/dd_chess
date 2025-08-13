@@ -15,7 +15,7 @@ int main() {
   board_t board = create_new_board();
   move_t moves[MAX_MOVES] = {0};
 
-  generate_pseudo_legal_pawn_moves(&board, moves);
+  generate_pseudo_legal_moves(&board, moves);
 
   int i = 0;
   while (i < MAX_MOVES && moves[i]) {
