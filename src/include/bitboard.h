@@ -9,6 +9,7 @@
 #define unset_bit(bitboard, square) (bitboard &= ~square_mask(square))
 #define toggle_bit(bitboard, square) (bitboard ^= square_mask(square))
 #define file_rank_to_square(file, rank) ((rank * 8) + file)
+#define unset_least_significant_one_bit(bitboard) (unset_bit(bitboard, least_significant_one_bit(bitboard)))
 
 /*
  * Use 64 bits to represent a board. Layout of bits is as shown below:
