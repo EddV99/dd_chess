@@ -8,6 +8,15 @@
 #define add_move(moves, move)                                                                                          \
   *moves = move;                                                                                                       \
   (moves)++;
+#define add_move_promotion(moves, move)                                                                                \
+  set_move_promotion_knight(move);                                                                                     \
+  add_move(moves, move);                                                                                               \
+  set_move_promotion_bishop(move);                                                                                     \
+  add_move(moves, move);                                                                                               \
+  set_move_promotion_rook(move);                                                                                       \
+  add_move(moves, move);                                                                                               \
+  set_move_promotion_queen(move);                                                                                      \
+  add_move(moves, move);
 
 int generate_pseudo_legal_moves(board_t *board, move_t *moves);
 int generate_pseudo_legal_white_moves(board_t *board, move_t *moves);

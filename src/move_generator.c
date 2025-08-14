@@ -41,15 +41,16 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
   while (move_up_one) {
     move_t move = 0;
     square_t to = (square_t)least_significant_one_bit(move_up_one);
+    unset_least_significant_one_bit(move_up_one);
+
     set_move_from(move, to + (8 * dir));
     set_move_to(move, to);
 
-    if (to & promotion_rank) {
-      set_move_promotion(move);
+    if (square_mask(to) & promotion_rank) {
+      add_move_promotion(moves, move);
+    } else {
+      add_move(moves, move);
     }
-
-    unset_least_significant_one_bit(move_up_one);
-    add_move(moves, move);
   }
 
   while (move_up_two) {
@@ -75,10 +76,11 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
     move_t move = 0;
     set_move_from(move, from);
     set_move_to(move, attack_to);
-    if (attack_to & promotion_rank) {
-      set_move_promotion(move);
+    if (square_mask(attack_to) & promotion_rank) {
+      add_move_promotion(moves, move);
+    } else {
+      add_move(moves, move);
     }
-    add_move(moves, move);
 
     if (!attacks)
       continue;
@@ -86,10 +88,11 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
     move = 0;
     set_move_from(move, from);
     set_move_to(move, attack_to);
-    if (attack_to & promotion_rank) {
-      set_move_promotion(move);
+    if (square_mask(attack_to) & promotion_rank) {
+      add_move_promotion(moves, move);
+    } else {
+      add_move(moves, move);
     }
-    add_move(moves, move);
   }
 
   return moves - tmp;
