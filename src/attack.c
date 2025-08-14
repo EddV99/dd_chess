@@ -95,14 +95,14 @@ void generate_slider_attacks() {
 }
 
 bitboard_t get_bishop_attacks(square_t square, bitboard_t occupancy) {
-  occupancy &= bishop_occupancy(square);
+  occupancy &= bishop_occupancy_masks[square];
   occupancy *= BISHOP_MAGICS[square];
   occupancy >>= 64 - bishop_occupancy_count[square];
   return bishop_attacks[square][occupancy];
 }
 
 bitboard_t get_rook_attacks(square_t square, bitboard_t occupancy) {
-  occupancy &= rook_occupancy(square);
+  occupancy &= rook_occupancy_masks[square];
   occupancy *= ROOK_MAGICS[square];
   occupancy >>= 64 - rook_occupancy_count[square];
   return rook_attacks[square][occupancy];
