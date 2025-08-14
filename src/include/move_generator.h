@@ -13,8 +13,7 @@ int generate_pseudo_legal_moves(board_t *board, move_t *moves);
 int generate_pseudo_legal_white_moves(board_t *board, move_t *moves);
 int generate_pseudo_legal_black_moves(board_t *board, move_t *moves);
 
-int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves);
-int generate_pseudo_legal_black_pawn_moves(board_t *board, move_t *moves);
+int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_t color);
 
 int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask);
 int generate_pseudo_legal_bishop_moves(board_t *board, move_t *moves);

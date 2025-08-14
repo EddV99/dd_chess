@@ -14,6 +14,7 @@ int main() {
   init_attacks();
   board_t board = create_new_board();
   move_t moves[MAX_MOVES] = {0};
+  board.is_white_turn = 0;
 
   generate_pseudo_legal_moves(&board, moves);
 

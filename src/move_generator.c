@@ -14,34 +14,37 @@ int generate_pseudo_legal_moves(board_t *board, move_t *moves) {
 
 int generate_pseudo_legal_white_moves(board_t *board, move_t *moves) {
   move_t *tmp = moves;
-  moves += generate_pseudo_legal_white_pawn_moves(board, moves);
+  moves += generate_pseudo_legal_pawn_moves(board, moves, WHITE);
   moves += generate_pseudo_legal_knight_moves(board, moves, WHITE, ~board->white_pieces);
   return moves - tmp;
 }
 
 int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) {
   move_t *tmp = moves;
-  moves += generate_pseudo_legal_black_pawn_moves(board, moves);
+  moves += generate_pseudo_legal_pawn_moves(board, moves, BLACK);
   moves += generate_pseudo_legal_knight_moves(board, moves, BLACK, ~board->black_pieces);
   return moves - tmp;
 }
 
-int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves) {
+int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_t color) {
   move_t *tmp = moves;
 
-  bitboard_t white_pawns = board->piece_bitboards[INDEX_BITBOARD(WHITE, PAWN)];
-  bitboard_t other_pieces = board->all_pieces & ~white_pawns;
+  bitboard_t pawns = board->piece_bitboards[INDEX_BITBOARD(color, PAWN)];
+  bitboard_t other_pieces = board->all_pieces & ~pawns;
+  int dir = color == WHITE ? SHIFT_LEFT : SHIFT_RIGHT;
+  bitboard_t promotion_rank = color == WHITE ? RANK_8 : RANK_1;
 
-  bitboard_t move_up_one = (white_pawns << 8) & ~other_pieces;
-  bitboard_t move_up_two = ((move_up_one & RANK_3) << 8) & ~other_pieces;
+  bitboard_t move_up_one = shift(dir, pawns, 8) & ~other_pieces;
+  bitboard_t move_up_two =
+      shift(dir, color == WHITE ? (move_up_one & RANK_3) : (move_up_one & RANK_6), 8) & ~other_pieces;
 
   while (move_up_one) {
     move_t move = 0;
     square_t to = (square_t)least_significant_one_bit(move_up_one);
-    set_move_from(move, to - 8);
+    set_move_from(move, to + (8 * dir));
     set_move_to(move, to);
 
-    if (to & RANK_8) {
+    if (to & promotion_rank) {
       set_move_promotion(move);
     }
 
@@ -52,17 +55,18 @@ int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves) {
   while (move_up_two) {
     move_t move = 0;
     square_t to = (square_t)least_significant_one_bit(move_up_two);
-    set_move_from(move, to - 16);
+    set_move_from(move, to + (16 * dir));
     set_move_to(move, to);
     unset_least_significant_one_bit(move_up_two);
     add_move(moves, move);
   }
 
-  while (white_pawns) {
-    square_t from = (square_t)least_significant_one_bit(white_pawns);
-    unset_least_significant_one_bit(white_pawns);
+  while (pawns) {
+    square_t from = (square_t)least_significant_one_bit(pawns);
+    unset_least_significant_one_bit(pawns);
     // TODO: implement en passant
-    bitboard_t attacks = pawn_attacks[WHITE][from] & (board->black_pieces | board->en_passant);
+    bitboard_t attacks =
+        pawn_attacks[color][from] & ((color == WHITE ? board->black_pieces : board->white_pieces) | board->en_passant);
 
     if (!attacks)
       continue;
@@ -71,10 +75,9 @@ int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves) {
     move_t move = 0;
     set_move_from(move, from);
     set_move_to(move, attack_to);
-    if (attack_to & RANK_8) {
+    if (attack_to & promotion_rank) {
       set_move_promotion(move);
     }
-    // TODO: set capture flag if needed
     add_move(moves, move);
 
     if (!attacks)
@@ -83,101 +86,33 @@ int generate_pseudo_legal_white_pawn_moves(board_t *board, move_t *moves) {
     move = 0;
     set_move_from(move, from);
     set_move_to(move, attack_to);
-    if (attack_to & RANK_8) {
+    if (attack_to & promotion_rank) {
       set_move_promotion(move);
     }
-    // TODO: set capture flag if needed
     add_move(moves, move);
   }
 
   return moves - tmp;
 }
 
-int generate_pseudo_legal_black_pawn_moves(board_t *board, move_t *moves) {
-  move_t *tmp = moves;
-
-  bitboard_t black_pawns = board->piece_bitboards[INDEX_BITBOARD(BLACK, PAWN)];
-  bitboard_t other_pieces = board->all_pieces & ~black_pawns;
-
-  bitboard_t move_up_one = (black_pawns >> 8) & ~other_pieces;
-  bitboard_t move_up_two = ((move_up_one & RANK_6) >> 8) & ~other_pieces;
-
-  while (move_up_one) {
-    move_t move = 0;
-    square_t to = (square_t)least_significant_one_bit(move_up_one);
-    set_move_from(move, to + 8);
-    set_move_to(move, to);
-
-    if (to & RANK_1) {
-      set_move_promotion(move);
-    }
-
-    unset_least_significant_one_bit(move_up_one);
-    add_move(moves, move);
-  }
-
-  while (move_up_two) {
-    move_t move = 0;
-    square_t to = (square_t)least_significant_one_bit(move_up_two);
-    set_move_from(move, to + 16);
-    set_move_to(move, to);
-    unset_least_significant_one_bit(move_up_two);
-    add_move(moves, move);
-  }
-
-  while (black_pawns) {
-    square_t from = (square_t)least_significant_one_bit(black_pawns);
-    unset_least_significant_one_bit(black_pawns);
-    // TODO: implement en passant
-    bitboard_t attacks = pawn_attacks[BLACK][from] & (board->black_pieces | board->en_passant);
-
-    if (!attacks)
-      continue;
-    square_t attack_to = (square_t)least_significant_one_bit(attacks);
-    unset_least_significant_one_bit(attacks);
-    move_t move = 0;
-    set_move_from(move, from);
-    set_move_to(move, attack_to);
-    if (attack_to & RANK_1) {
-      set_move_promotion(move);
-    }
-    // TODO: set capture flag if needed
-    add_move(moves, move);
-
-    if (!attacks)
-      continue;
-    attack_to = (square_t)least_significant_one_bit(attacks);
-    move = 0;
-    set_move_from(move, from);
-    set_move_to(move, attack_to);
-    if (attack_to & RANK_1) {
-      set_move_promotion(move);
-    }
-    // TODO: set capture flag if needed
-    add_move(moves, move);
-  }
-
-  return moves - tmp;
-}
-
-int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask) {
+int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_color_t color,
+                                       bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
   bitboard_t knights = board->piece_bitboards[INDEX_BITBOARD(color, KNIGHT)];
 
-  while(knights) {
+  while (knights) {
     square_t from = (square_t)least_significant_one_bit(knights);
     unset_least_significant_one_bit(knights);
-    
+
     bitboard_t attacks = knight_attacks[from] & can_move_to_mask;
-    while(attacks) {
+    while (attacks) {
       square_t to = (square_t)least_significant_one_bit(attacks);
       unset_least_significant_one_bit(attacks);
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
-      // TODO: set capture flag if needed
     }
   }
 
