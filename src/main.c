@@ -18,17 +18,24 @@ int main() {
 
   generate_pseudo_legal_moves(&board, moves);
 
+  int print = 1;
   int i = 0;
+  if (print)
+    printf("Printing Attacks\n");
   while (i < MAX_MOVES && moves[i]) {
-    move_t move = moves[i];
-    bitboard_t b = board.all_pieces;
-    set_bit(b, get_move_to(move));
-    unset_bit(b, get_move_from(move));
-    print_board(b);
-    set_bit(b, get_move_from(move));
-    unset_bit(b, get_move_to(move));
+    if (print) {
+      move_t move = moves[i];
+      bitboard_t b = board.all_pieces;
+      set_bit(b, get_move_to(move));
+      unset_bit(b, get_move_from(move));
+      print_board(b);
+      set_bit(b, get_move_from(move));
+      unset_bit(b, get_move_to(move));
+    }
     i++;
   }
+
+  printf("Total moves: %d\n", i);
 
   return 0;
 }
