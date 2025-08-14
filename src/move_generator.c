@@ -156,13 +156,6 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
       square_t to = (square_t)least_significant_one_bit(attacks);
       unset_least_significant_one_bit(attacks);
 
-      if (color == WHITE && (board->white_pieces & square_mask(to))) {
-        continue;
-      }
-      if (color == BLACK && (board->black_pieces & square_mask(to))) {
-        continue;
-      }
-
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, to);
