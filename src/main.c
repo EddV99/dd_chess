@@ -18,7 +18,7 @@ int main() {
 
   generate_pseudo_legal_moves(&board, moves);
 
-  int print = 1;
+  int print = 0;
   int i = 0;
   if (print)
     printf("Printing Attacks\n");

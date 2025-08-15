@@ -2,10 +2,14 @@
 #define DD_BOARD_H_
 
 #include "bitboard.h"
+#include "move.h"
 
 #include <stdint.h>
 
-#define INDEX_BITBOARD(color, piece) piece + (color * 6)
+#define INDEX_BITBOARD(color, piece) (piece) + ((color) * 6)
+#define move_piece(bitboard, from, to)                                                                                 \
+  unset_bit(bitboard, from);                                                                                           \
+  set_bit(bitboard, to);
 
 #define set_castle_rights_nw(rights) (rights |= 1 << 0)
 #define set_castle_rights_ne(rights) (rights |= 1 << 1)
@@ -39,5 +43,7 @@ typedef struct {
 } board_t;
 
 board_t create_new_board();
+void make_move(board_t *board, move_t move);
+void unmake_move(board_t *board, move_t move);
 
 #endif

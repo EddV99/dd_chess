@@ -1,5 +1,6 @@
 #include "board.h"
 #include "common.h"
+#include "move.h"
 
 board_t create_new_board() {
   board_t new_board = {
@@ -74,3 +75,56 @@ board_t create_new_board() {
   new_board.all_pieces = new_board.white_pieces | new_board.black_pieces;
   return new_board;
 }
+
+void make_move(board_t *board, move_t move) {
+  square_t from = get_move_from(move);
+  square_t to = get_move_to(move);
+  pieces_t promotion = get_move_promotion(move);
+  int castle = get_move_castle(move);
+
+  pieces_t from_piece = board->pieces[from];
+  pieces_t to_piece = board->pieces[to];
+  piece_color_t color = board->is_white_turn ? WHITE : BLACK;
+
+  move_piece(board->all_pieces, from, to);
+  board->pieces[from] = EMPTY;
+  unset_bit(board->piece_bitboards[INDEX_BITBOARD(color, from_piece)], from);
+
+  if (promotion) {
+    board->pieces[to] = promotion;
+    set_bit(board->piece_bitboards[INDEX_BITBOARD(color, promotion)], to);
+  } else {
+    board->pieces[to] = from_piece;
+    set_bit(board->piece_bitboards[INDEX_BITBOARD(color, from_piece)], to);
+  }
+
+  // TODO: castle stuff
+
+  if (to_piece != EMPTY) {
+    if (color == WHITE) {
+      unset_bit(board->black_pieces, to);
+      unset_bit(board->piece_bitboards[INDEX_BITBOARD(BLACK, to_piece)], to);
+    } else {
+      unset_bit(board->white_pieces, to);
+      unset_bit(board->piece_bitboards[INDEX_BITBOARD(WHITE, to_piece)], to);
+    }
+  } else if (get_move_en_passant(move)) {
+    if (color == WHITE) {
+      unset_bit(board->black_pieces, to - 8);
+      unset_bit(board->piece_bitboards[INDEX_BITBOARD(BLACK, PAWN)], to - 8);
+    } else {
+      unset_bit(board->white_pieces, to + 8);
+      unset_bit(board->piece_bitboards[INDEX_BITBOARD(WHITE, PAWN)], to + 8);
+    }
+  }
+
+  if (color == WHITE) {
+    move_piece(board->white_pieces, from, to);
+  } else {
+    move_piece(board->black_pieces, from, to);
+  }
+
+  board->en_passant = 0;
+  board->is_white_turn = !board->is_white_turn;
+}
+

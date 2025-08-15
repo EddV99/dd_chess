@@ -74,14 +74,14 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
     square_t from = (square_t)least_significant_one_bit(pawns);
     unset_least_significant_one_bit(pawns);
     // TODO: implement en passant
-    bitboard_t attacks =
-        pawn_attacks[color][from] & ((color == WHITE ? board->black_pieces : board->white_pieces) | board->en_passant);
+    bitboard_t attacks = pawn_attacks[color][from] & (color == WHITE ? board->black_pieces : board->white_pieces);
 
     if (!attacks)
       continue;
     square_t attack_to = (square_t)least_significant_one_bit(attacks);
     unset_least_significant_one_bit(attacks);
     move_t move = 0;
+    set_move_capture(move, board->pieces[attack_to]);
     set_move_from(move, from);
     set_move_to(move, attack_to);
     if (square_mask(attack_to) & promotion_rank) {
@@ -94,6 +94,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
       continue;
     attack_to = (square_t)least_significant_one_bit(attacks);
     move = 0;
+    set_move_capture(move, board->pieces[attack_to]);
     set_move_from(move, from);
     set_move_to(move, attack_to);
     if (square_mask(attack_to) & promotion_rank) {
@@ -121,6 +122,7 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_colo
       square_t to = (square_t)least_significant_one_bit(attacks);
       unset_least_significant_one_bit(attacks);
       move_t move = 0;
+      set_move_capture(move, board->pieces[to]);
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
@@ -159,6 +161,7 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
       unset_least_significant_one_bit(attacks);
 
       move_t move = 0;
+      set_move_capture(move, board->pieces[to]);
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
@@ -193,6 +196,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
     square_t to = (square_t)least_significant_one_bit(attacks);
     unset_least_significant_one_bit(attacks);
     move_t move = 0;
+    set_move_capture(move, board->pieces[to]);
     set_move_from(move, from);
     set_move_to(move, to);
     add_move(moves, move);
