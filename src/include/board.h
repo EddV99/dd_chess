@@ -30,6 +30,7 @@ typedef struct {
   // bit 0: castle rights for black queen side (North West)
   uint8_t castle_rights;
 
+  int pieces[SQUARE_COUNT];
   bitboard_t piece_bitboards[12];
   bitboard_t all_pieces;
   bitboard_t en_passant;

@@ -32,7 +32,45 @@ board_t create_new_board() {
                       square_mask(H7),
       .all_pieces = 0ULL,
       .en_passant = 0ULL,
+      .pieces = {EMPTY},
   };
+
+  new_board.pieces[A1] = ROOK;
+  new_board.pieces[B1] = KNIGHT;
+  new_board.pieces[C1] = BISHOP;
+  new_board.pieces[D1] = QUEEN;
+  new_board.pieces[E1] = KING;
+  new_board.pieces[F1] = BISHOP;
+  new_board.pieces[G1] = KNIGHT;
+  new_board.pieces[H1] = ROOK;
+
+  new_board.pieces[A2] = PAWN;
+  new_board.pieces[B2] = PAWN;
+  new_board.pieces[C2] = PAWN;
+  new_board.pieces[D2] = PAWN;
+  new_board.pieces[E2] = PAWN;
+  new_board.pieces[F2] = PAWN;
+  new_board.pieces[G2] = PAWN;
+  new_board.pieces[H2] = PAWN;
+
+  new_board.pieces[A7] = PAWN;
+  new_board.pieces[B7] = PAWN;
+  new_board.pieces[C7] = PAWN;
+  new_board.pieces[D7] = PAWN;
+  new_board.pieces[E7] = PAWN;
+  new_board.pieces[F7] = PAWN;
+  new_board.pieces[G7] = PAWN;
+  new_board.pieces[H7] = PAWN;
+
+  new_board.pieces[A8] = ROOK;
+  new_board.pieces[B8] = KNIGHT;
+  new_board.pieces[C8] = BISHOP;
+  new_board.pieces[D8] = QUEEN;
+  new_board.pieces[E8] = KING;
+  new_board.pieces[F8] = BISHOP;
+  new_board.pieces[G8] = KNIGHT;
+  new_board.pieces[H8] = ROOK;
+
   new_board.all_pieces = new_board.white_pieces | new_board.black_pieces;
   return new_board;
 }
