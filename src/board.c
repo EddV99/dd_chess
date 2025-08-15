@@ -4,7 +4,7 @@
 board_t create_new_board() {
   board_t new_board = {
       .is_white_turn = true,
-      .castle_rights = 0b11110000,
+      .castle_rights = 0b00001111,
       .piece_bitboards[INDEX_BITBOARD(WHITE, KING)] = square_mask(E1),
       .piece_bitboards[INDEX_BITBOARD(WHITE, QUEEN)] = square_mask(D1),
       .piece_bitboards[INDEX_BITBOARD(WHITE, ROOK)] = square_mask(A1) | square_mask(H1),
