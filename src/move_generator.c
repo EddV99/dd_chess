@@ -19,6 +19,7 @@ int generate_pseudo_legal_white_moves(board_t *board, move_t *moves) {
   moves += generate_pseudo_legal_bishop_moves(board, moves, WHITE);
   moves += generate_pseudo_legal_rook_moves(board, moves, WHITE);
   moves += generate_pseudo_legal_queen_moves(board, moves, WHITE);
+  moves += generate_pseudo_legal_king_moves(board, moves, WHITE, ~board->white_pieces);
   return moves - tmp;
 }
 
@@ -29,6 +30,7 @@ int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) {
   moves += generate_pseudo_legal_bishop_moves(board, moves, BLACK);
   moves += generate_pseudo_legal_rook_moves(board, moves, BLACK);
   moves += generate_pseudo_legal_queen_moves(board, moves, BLACK);
+  moves += generate_pseudo_legal_king_moves(board, moves, BLACK, ~board->black_pieces);
   return moves - tmp;
 }
 
@@ -178,8 +180,59 @@ int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, piece_color
   return generate_pseudo_legal_slider_moves(board, moves, color, QUEEN, board->all_pieces);
 }
 
-int generate_pseudo_legal_king_moves(board_t *board, move_t *moves) {
+int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
-  print_board(board->piece_bitboards[INDEX_BITBOARD(WHITE, KING)]);
+
+  bitboard_t king = board->piece_bitboards[INDEX_BITBOARD(color, KING)];
+
+  square_t from = (square_t)least_significant_one_bit(king);
+  unset_least_significant_one_bit(king);
+
+  bitboard_t attacks = king_attacks[from] & can_move_to_mask;
+  while (attacks) {
+    square_t to = (square_t)least_significant_one_bit(attacks);
+    unset_least_significant_one_bit(attacks);
+    move_t move = 0;
+    set_move_from(move, from);
+    set_move_to(move, to);
+    add_move(moves, move);
+  }
+
+  if (color == WHITE) {
+    if (((CASTLE_SOUTH_EAST_MASK & can_move_to_mask) == CASTLE_SOUTH_EAST_MASK) &&
+        get_castle_rights_se(board->castle_rights)) {
+      move_t move = 0;
+      set_move_from(move, from);
+      set_move_to(move, H1);
+      set_move_castle_east(move);
+      add_move(moves, move);
+    }
+    if (((CASTLE_SOUTH_WEST_MASK & can_move_to_mask) == CASTLE_SOUTH_WEST_MASK) &&
+        get_castle_rights_sw(board->castle_rights)) {
+      move_t move = 0;
+      set_move_from(move, from);
+      set_move_to(move, A1);
+      set_move_castle_west(move);
+      add_move(moves, move);
+    }
+  } else {
+    if (((CASTLE_NORTH_EAST_MASK & can_move_to_mask) == CASTLE_NORTH_EAST_MASK) &&
+        get_castle_rights_ne(board->castle_rights)) {
+      move_t move = 0;
+      set_move_from(move, from);
+      set_move_to(move, H8);
+      set_move_castle_east(move);
+      add_move(moves, move);
+    }
+    if (((CASTLE_NORTH_WEST_MASK & can_move_to_mask) == CASTLE_NORTH_WEST_MASK) &&
+        get_castle_rights_nw(board->castle_rights)) {
+      move_t move = 0;
+      set_move_from(move, from);
+      set_move_to(move, A8);
+      set_move_castle_west(move);
+      add_move(moves, move);
+    }
+  }
+
   return moves - tmp;
 }

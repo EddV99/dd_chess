@@ -29,6 +29,6 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
 int generate_pseudo_legal_bishop_moves(board_t *board, move_t *moves, piece_color_t color);
 int generate_pseudo_legal_rook_moves(board_t *board, move_t *moves, piece_color_t color);
 int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, piece_color_t color);
-int generate_pseudo_legal_king_moves(board_t *board, move_t *moves);
+int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask);
 
 #endif
