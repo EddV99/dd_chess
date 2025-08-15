@@ -127,4 +127,3 @@ void make_move(board_t *board, move_t move) {
   board->en_passant = 0;
   board->is_white_turn = !board->is_white_turn;
 }
-

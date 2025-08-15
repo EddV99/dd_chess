@@ -29,7 +29,7 @@
  * capture  castle   en passant  promotion  to        from
  * [20-18]  [17-16]  [15]        [14-12]    [11 - 6]  [5 - 0]
  *
- * use capture bits for move undo purposes
+ * use capture bits for undoing a move
  */
 typedef uint32_t move_t;
 
