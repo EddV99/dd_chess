@@ -240,3 +240,36 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
 
   return moves - tmp;
 }
+
+int is_square_attacked(board_t *board, square_t square, piece_color_t attacker_color) {
+  if ((attacker_color == WHITE) && (pawn_attacks[BLACK][square] & board->piece_bitboards[INDEX_BITBOARD(WHITE, PAWN)]))
+    return 1;
+  if ((attacker_color == BLACK) && (pawn_attacks[WHITE][square] & board->piece_bitboards[INDEX_BITBOARD(BLACK, PAWN)]))
+    return 1;
+  if (knight_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_BITBOARD(WHITE, KNIGHT)]
+                                                          : board->piece_bitboards[INDEX_BITBOARD(BLACK, KNIGHT)]))
+    return 1;
+  if (get_bishop_attacks(square, board->all_pieces) &
+      ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_BITBOARD(WHITE, BISHOP)]
+                                 : board->piece_bitboards[INDEX_BITBOARD(BLACK, BISHOP)]))
+    return 1;
+  if (get_rook_attacks(square, board->all_pieces) &
+      ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_BITBOARD(WHITE, ROOK)]
+                                 : board->piece_bitboards[INDEX_BITBOARD(BLACK, ROOK)]))
+    return 1;
+  // if (get_queen_attacks(square, board->all_pieces) &
+  //     ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_BITBOARD(WHITE, QUEEN)]
+  //                       : board->piece_bitboards[INDEX_BITBOARD(BLACK, QUEEN)]))
+  //   return 1;
+  if (king_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_BITBOARD(WHITE, KING)]
+                                                        : board->piece_bitboards[INDEX_BITBOARD(BLACK, KING)]))
+    return 1;
+
+  return 0;
+}
+
+int is_king_in_check(board_t *board, piece_color_t color) {
+  square_t square = least_significant_one_bit(color == WHITE ? board->piece_bitboards[INDEX_BITBOARD(WHITE, KING)]
+                                                             : board->piece_bitboards[INDEX_BITBOARD(BLACK, KING)]);
+  return is_square_attacked(board, square, color == WHITE ? BLACK : WHITE);
+}

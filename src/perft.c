@@ -15,8 +15,8 @@ uint64_t perft(int depth, board_t *board) {
   for (int i = 0; i < count; i++) {
     move_t move = move_list[i];
     make_move(board, move);
-    // if (!IsIncheck()) TODO
-    nodes += perft(depth - 1, board);
+    if (!is_king_in_check(board, board->is_white_turn ? BLACK : WHITE))
+      nodes += perft(depth - 1, board);
     unmake_move(board, move);
   }
   return nodes;
