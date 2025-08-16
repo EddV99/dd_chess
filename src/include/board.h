@@ -7,9 +7,35 @@
 #include <stdint.h>
 
 #define INDEX_BITBOARD(color, piece) (piece) + ((color) * 6)
+
 #define move_piece(bitboard, from, to)                                                                                 \
   unset_bit(bitboard, from);                                                                                           \
   set_bit(bitboard, to);
+
+#define move_piece_sync(board, from, to, piece, color)                                                                 \
+  bitboard_t *move_color_board = color == WHITE ? &board->white_pieces : &board->black_pieces;                         \
+  bitboard_t *move_piece_board = &board->piece_bitboards[INDEX_BITBOARD(color, piece)];                                \
+  move_piece(*move_color_board, from, to);                                                                             \
+  move_piece(board->all_pieces, from, to);                                                                             \
+  move_piece(*move_piece_board, from, to);                                                                             \
+  board->pieces[from] = EMPTY;                                                                                         \
+  board->pieces[to] = piece;
+
+#define remove_piece_sync(board, square, piece, color)                                                                 \
+  bitboard_t *remove_color_board = color == WHITE ? &board->white_pieces : &board->black_pieces;                       \
+  bitboard_t *remove_piece_board = &board->piece_bitboards[INDEX_BITBOARD(color, piece)];                              \
+  unset_bit(*remove_color_board, square);                                                                              \
+  unset_bit(board->all_pieces, square);                                                                                \
+  unset_bit(*remove_piece_board, square);                                                                              \
+  board->pieces[square] = EMPTY;
+
+#define add_piece_sync(board, square, piece, color)                                                                    \
+  bitboard_t *add_color_board = color == WHITE ? &board->white_pieces : &board->black_pieces;                          \
+  bitboard_t *add_piece_board = &board->piece_bitboards[INDEX_BITBOARD(color, piece)];                                 \
+  set_bit(*add_color_board, square);                                                                                   \
+  set_bit(board->all_pieces, square);                                                                                  \
+  set_bit(*add_piece_board, square);                                                                                   \
+  board->pieces[square] = piece;
 
 #define set_castle_rights_nw(rights) (rights |= 1 << 0)
 #define set_castle_rights_ne(rights) (rights |= 1 << 1)

@@ -80,50 +80,68 @@ void make_move(board_t *board, move_t move) {
   square_t from = get_move_from(move);
   square_t to = get_move_to(move);
   pieces_t promotion = get_move_promotion(move);
+
   int castle = get_move_castle(move);
+  int en_passant = get_move_en_passant(move);
+
+  pieces_t capture = get_move_capture(move);
+  int captured = capture != EMPTY;
 
   pieces_t from_piece = board->pieces[from];
   pieces_t to_piece = board->pieces[to];
   piece_color_t color = board->is_white_turn ? WHITE : BLACK;
 
-  move_piece(board->all_pieces, from, to);
-  board->pieces[from] = EMPTY;
-  unset_bit(board->piece_bitboards[INDEX_BITBOARD(color, from_piece)], from);
-
-  if (promotion) {
-    board->pieces[to] = promotion;
-    set_bit(board->piece_bitboards[INDEX_BITBOARD(color, promotion)], to);
-  } else {
-    board->pieces[to] = from_piece;
-    set_bit(board->piece_bitboards[INDEX_BITBOARD(color, from_piece)], to);
+  if (castle) {
+    square_t rook_square_before =
+        color == WHITE ? ((direction_t)castle == EAST ? H1 : A1) : ((direction_t)castle == EAST ? H8 : A8);
+    square_t rook_square_after =
+        color == WHITE ? ((direction_t)castle == EAST ? F1 : D1) : ((direction_t)castle == EAST ? F8 : D8);
+    move_piece_sync(board, rook_square_before, rook_square_after, ROOK, color);
+  } else if (en_passant) {
+    square_t captured_pawn_square = to + (8 * color == WHITE ? 1 : -1);
+    remove_piece_sync(board, captured_pawn_square, PAWN, (color == WHITE ? BLACK : WHITE));
+  } else if (captured) {
+    remove_piece_sync(board, to, to_piece, (color == WHITE ? BLACK : WHITE));
   }
 
-  // TODO: castle stuff
+  move_piece_sync(board, from, to, (promotion != EMPTY ? promotion : from_piece), color);
 
-  if (to_piece != EMPTY) {
-    if (color == WHITE) {
-      unset_bit(board->black_pieces, to);
-      unset_bit(board->piece_bitboards[INDEX_BITBOARD(BLACK, to_piece)], to);
-    } else {
-      unset_bit(board->white_pieces, to);
-      unset_bit(board->piece_bitboards[INDEX_BITBOARD(WHITE, to_piece)], to);
-    }
-  } else if (get_move_en_passant(move)) {
-    if (color == WHITE) {
-      unset_bit(board->black_pieces, to - 8);
-      unset_bit(board->piece_bitboards[INDEX_BITBOARD(BLACK, PAWN)], to - 8);
-    } else {
-      unset_bit(board->white_pieces, to + 8);
-      unset_bit(board->piece_bitboards[INDEX_BITBOARD(WHITE, PAWN)], to + 8);
-    }
-  }
-
-  if (color == WHITE) {
-    move_piece(board->white_pieces, from, to);
-  } else {
-    move_piece(board->black_pieces, from, to);
-  }
-
-  board->en_passant = 0;
   board->is_white_turn = !board->is_white_turn;
+}
+
+void unmake_move(board_t *board, move_t move) {
+  board->is_white_turn = !board->is_white_turn;
+
+  square_t from = get_move_from(move);
+  square_t to = get_move_to(move);
+  pieces_t promotion = get_move_promotion(move);
+
+  int castle = get_move_castle(move);
+  int en_passant = get_move_en_passant(move);
+
+  pieces_t capture = get_move_capture(move);
+  int captured = capture != EMPTY;
+
+  pieces_t piece = board->pieces[to];
+  piece_color_t color = board->is_white_turn ? WHITE : BLACK;
+
+  if (promotion != EMPTY) {
+    remove_piece_sync(board, to, promotion, color);
+    add_piece_sync(board, from, PAWN, color);
+  } else {
+    move_piece_sync(board, to, from, piece, color);
+  }
+
+  if (castle) {
+    square_t rook_square_before =
+        color == WHITE ? ((direction_t)castle == EAST ? H1 : A1) : ((direction_t)castle == EAST ? H8 : A8);
+    square_t rook_square_after =
+        color == WHITE ? ((direction_t)castle == EAST ? F1 : D1) : ((direction_t)castle == EAST ? F8 : D8);
+    move_piece_sync(board, rook_square_after, rook_square_before, ROOK, color);
+  } else if (en_passant) {
+    square_t captured_pawn_square = to + (8 * color == WHITE ? 1 : -1);
+    add_piece_sync(board, captured_pawn_square, PAWN, (color == WHITE ? BLACK : WHITE));
+  } else if (captured) {
+    add_piece_sync(board, to, capture, (color == WHITE ? BLACK : WHITE));
+  }
 }
