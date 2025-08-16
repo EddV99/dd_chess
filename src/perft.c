@@ -14,8 +14,9 @@ uint64_t perft(int depth, board_t *board) {
   int count = generate_pseudo_legal_moves(board, move_list);
   for (int i = 0; i < count; i++) {
     move_t move = move_list[i];
+    piece_color_t old_color = board->is_white_turn ? WHITE : BLACK;
     make_move(board, move);
-    if (!is_king_in_check(board, board->is_white_turn ? BLACK : WHITE))
+    if (!is_king_in_check(board, old_color))
       nodes += perft(depth - 1, board);
     unmake_move(board, move);
   }

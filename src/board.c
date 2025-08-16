@@ -6,27 +6,27 @@ board_t create_new_board() {
   board_t new_board = {
       .is_white_turn = true,
       .castle_rights = 0b00001111,
-      .piece_bitboards[INDEX_BITBOARD(WHITE, KING)] = square_mask(E1),
-      .piece_bitboards[INDEX_BITBOARD(WHITE, QUEEN)] = square_mask(D1),
-      .piece_bitboards[INDEX_BITBOARD(WHITE, ROOK)] = square_mask(A1) | square_mask(H1),
-      .piece_bitboards[INDEX_BITBOARD(WHITE, BISHOP)] = square_mask(C1) | square_mask(F1),
-      .piece_bitboards[INDEX_BITBOARD(WHITE, KNIGHT)] = square_mask(B1) | square_mask(G1),
-      .piece_bitboards[INDEX_BITBOARD(WHITE, PAWN)] = square_mask(A2) | square_mask(B2) | square_mask(C2) |
-                                                      square_mask(D2) | square_mask(E2) | square_mask(F2) |
-                                                      square_mask(G2) | square_mask(H2),
+      .piece_bitboards[INDEX_COLOR_PIECE(WHITE, KING)] = square_mask(E1),
+      .piece_bitboards[INDEX_COLOR_PIECE(WHITE, QUEEN)] = square_mask(D1),
+      .piece_bitboards[INDEX_COLOR_PIECE(WHITE, ROOK)] = square_mask(A1) | square_mask(H1),
+      .piece_bitboards[INDEX_COLOR_PIECE(WHITE, BISHOP)] = square_mask(C1) | square_mask(F1),
+      .piece_bitboards[INDEX_COLOR_PIECE(WHITE, KNIGHT)] = square_mask(B1) | square_mask(G1),
+      .piece_bitboards[INDEX_COLOR_PIECE(WHITE, PAWN)] = square_mask(A2) | square_mask(B2) | square_mask(C2) |
+                                                         square_mask(D2) | square_mask(E2) | square_mask(F2) |
+                                                         square_mask(G2) | square_mask(H2),
       .white_pieces = square_mask(A1) | square_mask(B1) | square_mask(C1) | square_mask(D1) | square_mask(E1) |
                       square_mask(F1) | square_mask(G1) | square_mask(H1) | square_mask(A2) | square_mask(B2) |
                       square_mask(C2) | square_mask(D2) | square_mask(E2) | square_mask(F2) | square_mask(G2) |
                       square_mask(H2),
 
-      .piece_bitboards[INDEX_BITBOARD(BLACK, KING)] = square_mask(E8),
-      .piece_bitboards[INDEX_BITBOARD(BLACK, QUEEN)] = square_mask(D8),
-      .piece_bitboards[INDEX_BITBOARD(BLACK, ROOK)] = square_mask(A8) | square_mask(H8),
-      .piece_bitboards[INDEX_BITBOARD(BLACK, BISHOP)] = square_mask(C8) | square_mask(F8),
-      .piece_bitboards[INDEX_BITBOARD(BLACK, KNIGHT)] = square_mask(B8) | square_mask(G8),
-      .piece_bitboards[INDEX_BITBOARD(BLACK, PAWN)] = square_mask(A7) | square_mask(B7) | square_mask(C7) |
-                                                      square_mask(D7) | square_mask(E7) | square_mask(F7) |
-                                                      square_mask(G7) | square_mask(H7),
+      .piece_bitboards[INDEX_COLOR_PIECE(BLACK, KING)] = square_mask(E8),
+      .piece_bitboards[INDEX_COLOR_PIECE(BLACK, QUEEN)] = square_mask(D8),
+      .piece_bitboards[INDEX_COLOR_PIECE(BLACK, ROOK)] = square_mask(A8) | square_mask(H8),
+      .piece_bitboards[INDEX_COLOR_PIECE(BLACK, BISHOP)] = square_mask(C8) | square_mask(F8),
+      .piece_bitboards[INDEX_COLOR_PIECE(BLACK, KNIGHT)] = square_mask(B8) | square_mask(G8),
+      .piece_bitboards[INDEX_COLOR_PIECE(BLACK, PAWN)] = square_mask(A7) | square_mask(B7) | square_mask(C7) |
+                                                         square_mask(D7) | square_mask(E7) | square_mask(F7) |
+                                                         square_mask(G7) | square_mask(H7),
       .black_pieces = square_mask(A8) | square_mask(B8) | square_mask(C8) | square_mask(D8) | square_mask(E8) |
                       square_mask(F8) | square_mask(G8) | square_mask(H8) | square_mask(A7) | square_mask(B7) |
                       square_mask(C7) | square_mask(D7) | square_mask(E7) | square_mask(F7) | square_mask(G7) |
@@ -105,15 +105,15 @@ void make_move(board_t *board, move_t move) {
   }
 
   move_piece_sync(board, from, to, (promotion != EMPTY ? promotion : from_piece), color);
-  set_move_old_en_passant_square(move, (square_t)least_significant_one_bit(board->en_passant)); 
+  set_move_old_en_passant_square(move, (square_t)least_significant_one_bit(board->en_passant));
   board->en_passant = 0ULL;
-  if(from_piece == PAWN) { 
-    if((from & RANK_2) && (to & RANK_4)) {
+  if (from_piece == PAWN) {
+    if ((from & RANK_2) && (to & RANK_4)) {
       board->en_passant = square_mask(to - 8);
-    } else if((from & RANK_7) && (to & RANK_5)) {
+    } else if ((from & RANK_7) && (to & RANK_5)) {
       board->en_passant = square_mask(to + 8);
     }
-  } 
+  }
   board->is_white_turn = !board->is_white_turn;
 }
 

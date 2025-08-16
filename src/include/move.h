@@ -6,7 +6,8 @@
 
 #define unset_move_capture(move) (move = (move & 0b000111111111111111111))
 
-#define set_move_old_en_passant_square(move, square) (move = (move & 0b000000111111111111111111111) | ((uint16_t)(square)) << 21)
+#define set_move_old_en_passant_square(move, square)                                                                   \
+  (move = (move & 0b000000111111111111111111111) | ((uint16_t)(square)) << 21)
 #define set_move_capture(move, piece) (move = (move & 0b111111000111111111111111111) | ((piece + 1) << 18))
 #define set_move_castle_east(move) (move = (move & 0b111111111001111111111111111) | (EAST << 16))
 #define set_move_castle_west(move) (move = (move & 0b111111111001111111111111111) | (WEST << 16))

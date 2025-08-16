@@ -3,6 +3,8 @@
 
 #define SQUARE_COUNT 64
 
+#define INDEX_COLOR_PIECE(color, piece) (piece) + ((color) * 6)
+
 typedef enum {
   EMPTY = -1,
   PAWN,
@@ -12,6 +14,8 @@ typedef enum {
   QUEEN,
   KING,
 } pieces_t;
+
+extern const char *piece_to_utf8[];
 
 // clang-format off
 // IMPORTANT NOTE: Values are in this particular order because of layout 

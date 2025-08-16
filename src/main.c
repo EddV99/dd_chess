@@ -16,7 +16,7 @@ int main() {
 
   board_t board = create_new_board();
   const int size = 5;
-  int depths[] = {0, 1, 2, 3, 4};
+  int depths[] = {0, 1, 2, 3, 4, 5};
   printf("PERFT Results\n");
   printf("========================================================\n");
   for (int i = 0; i < size; i++) {
