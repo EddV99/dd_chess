@@ -5,6 +5,6 @@
 
 #include <stdint.h>
 
-uint64_t perft(int depth, board_t *board);
+uint64_t perft(int depth, board_t *board, int print);
 
 #endif

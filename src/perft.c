@@ -4,7 +4,9 @@
 #include "move.h"
 #include "move_generator.h"
 
-uint64_t perft(int depth, board_t *board) {
+#include <stdio.h>
+
+uint64_t perft(int depth, board_t *board, int print) {
   uint64_t nodes = 0;
 
   if (depth == 0)
@@ -16,8 +18,12 @@ uint64_t perft(int depth, board_t *board) {
     move_t move = move_list[i];
     piece_color_t old_color = board->is_white_turn ? WHITE : BLACK;
     make_move(board, move);
+    if(print){
+      printf("%d:\n", i);
+      print_board(board);
+    }
     if (!is_king_in_check(board, old_color))
-      nodes += perft(depth - 1, board);
+      nodes += perft(depth - 1, board, print);
     unmake_move(board, move);
   }
   return nodes;

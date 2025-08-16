@@ -154,3 +154,23 @@ void unmake_move(board_t *board, move_t move) {
     add_piece_sync(board, to, capture, (color == WHITE ? BLACK : WHITE));
   }
 }
+
+void print_board(board_t *board) {
+  for (int rank = 7; rank >= 0; rank--) {
+    if (rank == 7)
+      printf("%d  ", rank + 1);
+    else
+      printf("\n%d  ", rank + 1);
+    for (int file = 7; file >= 0; file--) {
+      square_t sq = file_rank_to_square(file, rank);
+      if (board->pieces[sq] == EMPTY) {
+        printf(". ");
+      } else {
+        piece_color_t color =
+            board->white_pieces & square_mask(sq) ? (DARK_MODE ? BLACK : WHITE) : (DARK_MODE ? WHITE : BLACK);
+        printf("%s ", piece_to_utf8[INDEX_COLOR_PIECE(color, board->pieces[sq])]);
+      }
+    }
+  }
+  printf("\n\n   A B C D E F G H \n\n");
+}

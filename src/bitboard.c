@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-void print_board(bitboard_t bitboard) {
+void print_bitboard(bitboard_t bitboard) {
   for (int rank = 7; rank >= 0; rank--) {
     if (rank == 7)
       printf("%d  ", rank + 1);

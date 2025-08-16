@@ -58,7 +58,7 @@ typedef struct {
   // bit 0: castle rights for black queen side (North West)
   uint8_t castle_rights;
 
-  int pieces[SQUARE_COUNT];
+  pieces_t pieces[SQUARE_COUNT];
   bitboard_t piece_bitboards[12];
   bitboard_t all_pieces;
   bitboard_t en_passant;
@@ -69,5 +69,6 @@ typedef struct {
 board_t create_new_board();
 void make_move(board_t *board, move_t move);
 void unmake_move(board_t *board, move_t move);
+void print_board(board_t *board);
 
 #endif
