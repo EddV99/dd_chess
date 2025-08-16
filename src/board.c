@@ -105,12 +105,21 @@ void make_move(board_t *board, move_t move) {
   }
 
   move_piece_sync(board, from, to, (promotion != EMPTY ? promotion : from_piece), color);
-
+  set_move_old_en_passant_square(move, (square_t)least_significant_one_bit(board->en_passant)); 
+  board->en_passant = 0ULL;
+  if(from_piece == PAWN) { 
+    if((from & RANK_2) && (to & RANK_4)) {
+      board->en_passant = square_mask(to - 8);
+    } else if((from & RANK_7) && (to & RANK_5)) {
+      board->en_passant = square_mask(to + 8);
+    }
+  } 
   board->is_white_turn = !board->is_white_turn;
 }
 
 void unmake_move(board_t *board, move_t move) {
   board->is_white_turn = !board->is_white_turn;
+  board->en_passant = square_mask(get_move_old_en_passant_square(move));
 
   square_t from = get_move_from(move);
   square_t to = get_move_to(move);
