@@ -12,6 +12,7 @@ add_executable(
   src/magic.c
   src/move_generator.c
   src/prng.c
+  src/perft.c
 )
 
 target_compile_options(
