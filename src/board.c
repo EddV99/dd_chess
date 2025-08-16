@@ -2,6 +2,8 @@
 #include "common.h"
 #include "move.h"
 
+#include <stdio.h>
+
 board_t create_new_board() {
   board_t new_board = {
       .is_white_turn = true,
@@ -33,7 +35,11 @@ board_t create_new_board() {
                       square_mask(H7),
       .all_pieces = 0ULL,
       .en_passant = 0ULL,
-      .pieces = {EMPTY},
+      .pieces = {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
   };
 
   new_board.pieces[A1] = ROOK;
@@ -104,7 +110,7 @@ void make_move(board_t *board, move_t move) {
     remove_piece_sync(board, to, to_piece, (color == WHITE ? BLACK : WHITE));
   }
 
-  move_piece_sync(board, from, to, (promotion != EMPTY ? promotion : from_piece), color);
+  move_piece_sync(board, from, to, (promotion ? promotion : from_piece), color);
   set_move_old_en_passant_square(move, (square_t)least_significant_one_bit(board->en_passant));
   board->en_passant = 0ULL;
   if (from_piece == PAWN) {
@@ -134,7 +140,7 @@ void unmake_move(board_t *board, move_t move) {
   pieces_t piece = board->pieces[to];
   piece_color_t color = board->is_white_turn ? WHITE : BLACK;
 
-  if (promotion != EMPTY) {
+  if (promotion) {
     remove_piece_sync(board, to, promotion, color);
     add_piece_sync(board, from, PAWN, color);
   } else {

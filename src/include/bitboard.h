@@ -8,7 +8,6 @@
 #define set_bit(bitboard, square) (bitboard |= square_mask(square))
 #define unset_bit(bitboard, square) (bitboard &= ~square_mask(square))
 #define toggle_bit(bitboard, square) (bitboard ^= square_mask(square))
-#define file_rank_to_square(file, rank) ((rank * 8) + file)
 #define unset_least_significant_one_bit(bitboard) (unset_bit(bitboard, least_significant_one_bit(bitboard)))
 #define SHIFT_LEFT -1
 #define SHIFT_RIGHT 1
@@ -30,7 +29,7 @@
  */
 typedef uint64_t bitboard_t;
 
-void print_board(bitboard_t bitboard);
+void print_bitboard(bitboard_t bitboard);
 int population_count(bitboard_t bitboard);
 
 static const int lsb_index[64] = {0,  47, 1,  56, 48, 27, 2,  60, 57, 49, 41, 37, 28, 16, 3,  61,

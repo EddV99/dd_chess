@@ -133,7 +133,7 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_colo
       square_t to = (square_t)least_significant_one_bit(attacks);
       unset_least_significant_one_bit(attacks);
       move_t move = 0;
-      set_move_capture(move, board->pieces[to]);
+      if(board->pieces[to] != EMPTY) set_move_capture(move, board->pieces[to]);
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
@@ -172,7 +172,7 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
       unset_least_significant_one_bit(attacks);
 
       move_t move = 0;
-      set_move_capture(move, board->pieces[to]);
+      if(board->pieces[to] != EMPTY) set_move_capture(move, board->pieces[to]);
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
@@ -207,7 +207,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
     square_t to = (square_t)least_significant_one_bit(attacks);
     unset_least_significant_one_bit(attacks);
     move_t move = 0;
-    set_move_capture(move, board->pieces[to]);
+    if(board->pieces[to] != EMPTY) set_move_capture(move, board->pieces[to]);
     set_move_from(move, from);
     set_move_to(move, to);
     add_move(moves, move);
