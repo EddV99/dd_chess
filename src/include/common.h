@@ -2,6 +2,9 @@
 #define DD_COMMON_H_
 
 #define SQUARE_COUNT 64
+#define DARK_MODE 1
+#define file_rank_to_square(file, rank) ((rank * 8) + file)
+#define INDEX_COLOR_PIECE(color, piece) (piece) + ((color) * 6)
 
 typedef enum {
   EMPTY = -1,
@@ -12,6 +15,8 @@ typedef enum {
   QUEEN,
   KING,
 } pieces_t;
+
+extern const char *piece_to_utf8[];
 
 // clang-format off
 // IMPORTANT NOTE: Values are in this particular order because of layout 
@@ -28,7 +33,7 @@ typedef enum {
 } square_t;
 // clang-format on
 
-typedef enum { WHITE, BLACK } piece_color_t;
+typedef enum { WHITE = 0, BLACK } piece_color_t;
 
 typedef enum { H, G, F, E, D, C, B, A } file_t;
 

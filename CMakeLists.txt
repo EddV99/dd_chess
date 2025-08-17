@@ -7,10 +7,12 @@ add_executable(
   dd_chess 
   src/main.c
   src/attack.c
-  src/board.c
   src/bitboard.c
+  src/board.c
+  src/common.c
   src/magic.c
   src/move_generator.c
+  src/perft.c
   src/prng.c
 )
 

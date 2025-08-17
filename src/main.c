@@ -4,6 +4,7 @@
 #include "common.h"
 #include "magic.h"
 #include "move_generator.h"
+#include "perft.h"
 #include "prng.h"
 
 #include <stdint.h>
@@ -12,30 +13,8 @@
 int main() {
   printf("dd_chess\n");
   init_attacks();
-  board_t board = create_new_board();
-  move_t moves[MAX_MOVES] = {0};
-  board.is_white_turn = 0;
 
-  generate_pseudo_legal_moves(&board, moves);
-
-  int print = 1;
-  int i = 0;
-  if (print)
-    printf("Printing Attacks\n");
-  while (i < MAX_MOVES && moves[i]) {
-    if (print) {
-      move_t move = moves[i];
-      bitboard_t b = board.all_pieces;
-      set_bit(b, get_move_to(move));
-      unset_bit(b, get_move_from(move));
-      print_board(b);
-      set_bit(b, get_move_from(move));
-      unset_bit(b, get_move_to(move));
-    }
-    i++;
-  }
-
-  printf("Total moves: %d\n", i);
+  perft_report();
 
   return 0;
 }

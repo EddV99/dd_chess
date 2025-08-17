@@ -31,4 +31,7 @@ int generate_pseudo_legal_rook_moves(board_t *board, move_t *moves, piece_color_
 int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, piece_color_t color);
 int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask);
 
+int is_square_attacked(board_t *board, square_t square, piece_color_t attacker_color);
+int is_king_in_check(board_t *board, piece_color_t color);
+
 #endif
