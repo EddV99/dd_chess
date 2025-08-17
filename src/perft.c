@@ -35,7 +35,7 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
   int count = generate_pseudo_legal_moves(board, move_list);
   for (int i = 0; i < count; i++) {
     move_t move = move_list[i];
-    if ((pieces_t)get_move_capture(move) != EMPTY)
+    if ((piece_t)get_move_capture(move) != EMPTY)
       (*captures)++;
     if (get_move_en_passant(move))
       (*ep)++;

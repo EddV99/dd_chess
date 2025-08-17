@@ -85,16 +85,16 @@ board_t create_new_board() {
 void make_move(board_t *board, move_t move) {
   square_t from = get_move_from(move);
   square_t to = get_move_to(move);
-  pieces_t promotion = get_move_promotion(move);
+  piece_t promotion = get_move_promotion(move);
 
   int castle = get_move_castle(move);
   int en_passant = get_move_en_passant(move);
 
-  pieces_t capture = get_move_capture(move);
+  piece_t capture = get_move_capture(move);
   int captured = capture != EMPTY;
 
-  pieces_t from_piece = board->pieces[from];
-  pieces_t to_piece = board->pieces[to];
+  piece_t from_piece = board->pieces[from];
+  piece_t to_piece = board->pieces[to];
   color_t color = board->is_white_turn ? WHITE : BLACK;
 
   if (castle) {
@@ -129,15 +129,15 @@ void unmake_move(board_t *board, move_t move) {
 
   square_t from = get_move_from(move);
   square_t to = get_move_to(move);
-  pieces_t promotion = get_move_promotion(move);
+  piece_t promotion = get_move_promotion(move);
 
   int castle = get_move_castle(move);
   int en_passant = get_move_en_passant(move);
 
-  pieces_t capture = get_move_capture(move);
+  piece_t capture = get_move_capture(move);
   int captured = capture != EMPTY;
 
-  pieces_t piece = board->pieces[to];
+  piece_t piece = board->pieces[to];
   color_t color = board->is_white_turn ? WHITE : BLACK;
 
   if (promotion) {

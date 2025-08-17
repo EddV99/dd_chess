@@ -121,7 +121,7 @@ bitboard_t generate_magic_number(prng_t *prng) {
   return get_random_number_u64(prng) & get_random_number_u64(prng) & get_random_number_u64(prng);
 }
 
-bitboard_t find_magic_number(square_t square, int bit_count, pieces_t piece, prng_t *prng) {
+bitboard_t find_magic_number(square_t square, int bit_count, piece_t piece, prng_t *prng) {
   if (piece != ROOK && piece != BISHOP)
     return -1;
   int is_bishop = piece == BISHOP;

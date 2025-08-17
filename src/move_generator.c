@@ -156,7 +156,7 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, color_t co
   return moves - tmp;
 }
 
-int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, color_t color, pieces_t piece,
+int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, color_t color, piece_t piece,
                                        bitboard_t occupancy_mask) {
   move_t *tmp = moves;
 

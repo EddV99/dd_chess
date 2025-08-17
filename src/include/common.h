@@ -14,7 +14,7 @@ typedef enum {
   ROOK,
   QUEEN,
   KING,
-} pieces_t;
+} piece_t;
 
 extern const char *piece_to_utf8[];
 
