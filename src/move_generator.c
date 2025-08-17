@@ -224,7 +224,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
     square_t to = (square_t)least_significant_one_bit(attacks);
     unset_least_significant_one_bit(attacks);
     move_t move = 0;
-    if (board->pieces[to] != EMPTY){
+    if (board->pieces[to] != EMPTY) {
       set_move_capture(move, board->pieces[to]);
     } else {
       set_move_capture(move, EMPTY);
@@ -297,7 +297,7 @@ int is_square_attacked(board_t *board, square_t square, piece_color_t attacker_c
     return 1;
   if (get_queen_attacks(square, board->all_pieces) &
       ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, QUEEN)]
-                        : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, QUEEN)]))
+                                 : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, QUEEN)]))
     return 1;
   if (king_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, KING)]
                                                         : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, KING)]))

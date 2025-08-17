@@ -49,7 +49,7 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
       (*checks)++;
     if (print)
       print_board(board);
-    if (!is_king_in_check(board, old_color)) 
+    if (!is_king_in_check(board, old_color))
       nodes += perft(depth - 1, board, print, captures, ep, castles, promotions, checks);
     unmake_move(board, move);
   }
