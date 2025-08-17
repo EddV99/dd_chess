@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 int generate_pseudo_legal_moves(board_t *board, move_t *moves) {
-  if (board->is_white_turn)
+  if (board->turn_color == WHITE)
     return generate_pseudo_legal_white_moves(board, moves);
   else
     return generate_pseudo_legal_black_moves(board, moves);
@@ -37,7 +37,7 @@ int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) {
 int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, color_t color) {
   move_t *tmp = moves;
 
-  bitboard_t pawns = board->piece_bitboards[INDEX_COLOR_PIECE(color, PAWN)];
+  bitboard_t pawns = board->piece_bitboards[index_color_piece(color, PAWN)];
   bitboard_t other_pieces = board->all_pieces & ~pawns;
   int dir = color == WHITE ? SHIFT_LEFT : SHIFT_RIGHT;
   bitboard_t promotion_rank = color == WHITE ? RANK_8 : RANK_1;
@@ -131,7 +131,7 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, color_t co
                                        bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
-  bitboard_t knights = board->piece_bitboards[INDEX_COLOR_PIECE(color, KNIGHT)];
+  bitboard_t knights = board->piece_bitboards[index_color_piece(color, KNIGHT)];
 
   while (knights) {
     square_t from = (square_t)least_significant_one_bit(knights);
@@ -160,7 +160,7 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, color_t co
                                        bitboard_t occupancy_mask) {
   move_t *tmp = moves;
 
-  bitboard_t pieces = board->piece_bitboards[INDEX_COLOR_PIECE(color, piece)];
+  bitboard_t pieces = board->piece_bitboards[index_color_piece(color, piece)];
 
   while (pieces) {
     square_t from = (square_t)least_significant_one_bit(pieces);
@@ -214,7 +214,7 @@ int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, color_t col
 int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t color, bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
-  bitboard_t king = board->piece_bitboards[INDEX_COLOR_PIECE(color, KING)];
+  bitboard_t king = board->piece_bitboards[index_color_piece(color, KING)];
 
   square_t from = (square_t)least_significant_one_bit(king);
   unset_least_significant_one_bit(king);
@@ -279,35 +279,35 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
 
 int is_square_attacked(board_t *board, square_t square, color_t attacker_color) {
   if ((attacker_color == WHITE) &&
-      (pawn_attacks[BLACK][square] & board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, PAWN)]))
+      (pawn_attacks[BLACK][square] & board->piece_bitboards[index_color_piece(WHITE, PAWN)]))
     return 1;
   if ((attacker_color == BLACK) &&
-      (pawn_attacks[WHITE][square] & board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, PAWN)]))
+      (pawn_attacks[WHITE][square] & board->piece_bitboards[index_color_piece(BLACK, PAWN)]))
     return 1;
-  if (knight_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, KNIGHT)]
-                                                          : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, KNIGHT)]))
+  if (knight_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[index_color_piece(WHITE, KNIGHT)]
+                                                          : board->piece_bitboards[index_color_piece(BLACK, KNIGHT)]))
     return 1;
   if (get_bishop_attacks(square, board->all_pieces) &
-      ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, BISHOP)]
-                                 : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, BISHOP)]))
+      ((attacker_color == WHITE) ? board->piece_bitboards[index_color_piece(WHITE, BISHOP)]
+                                 : board->piece_bitboards[index_color_piece(BLACK, BISHOP)]))
     return 1;
   if (get_rook_attacks(square, board->all_pieces) &
-      ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, ROOK)]
-                                 : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, ROOK)]))
+      ((attacker_color == WHITE) ? board->piece_bitboards[index_color_piece(WHITE, ROOK)]
+                                 : board->piece_bitboards[index_color_piece(BLACK, ROOK)]))
     return 1;
   if (get_queen_attacks(square, board->all_pieces) &
-      ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, QUEEN)]
-                                 : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, QUEEN)]))
+      ((attacker_color == WHITE) ? board->piece_bitboards[index_color_piece(WHITE, QUEEN)]
+                                 : board->piece_bitboards[index_color_piece(BLACK, QUEEN)]))
     return 1;
-  if (king_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, KING)]
-                                                        : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, KING)]))
+  if (king_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[index_color_piece(WHITE, KING)]
+                                                        : board->piece_bitboards[index_color_piece(BLACK, KING)]))
     return 1;
 
   return 0;
 }
 
 int is_king_in_check(board_t *board, color_t color) {
-  square_t square = least_significant_one_bit(color == WHITE ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, KING)]
-                                                             : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, KING)]);
+  square_t square = least_significant_one_bit(color == WHITE ? board->piece_bitboards[index_color_piece(WHITE, KING)]
+                                                             : board->piece_bitboards[index_color_piece(BLACK, KING)]);
   return is_square_attacked(board, square, color == WHITE ? BLACK : WHITE);
 }

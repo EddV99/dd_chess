@@ -4,7 +4,7 @@
 #define SQUARE_COUNT 64
 #define DARK_MODE 1
 #define file_rank_to_square(file, rank) ((rank * 8) + file)
-#define INDEX_COLOR_PIECE(color, piece) (piece) + ((color) * 6)
+#define index_color_piece(color, piece) (piece) + ((color) * 6)
 
 typedef enum {
   EMPTY = -1,

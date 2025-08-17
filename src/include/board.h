@@ -12,7 +12,7 @@
 
 #define move_piece_sync(board, from, to, piece, color)                                                                 \
   bitboard_t *move_color_board = color == WHITE ? &board->white_pieces : &board->black_pieces;                         \
-  bitboard_t *move_piece_board = &board->piece_bitboards[INDEX_COLOR_PIECE(color, piece)];                             \
+  bitboard_t *move_piece_board = &board->piece_bitboards[index_color_piece(color, piece)];                             \
   move_piece(*move_color_board, from, to);                                                                             \
   move_piece(board->all_pieces, from, to);                                                                             \
   move_piece(*move_piece_board, from, to);                                                                             \
@@ -21,7 +21,7 @@
 
 #define remove_piece_sync(board, square, piece, color)                                                                 \
   bitboard_t *remove_color_board = color == WHITE ? &board->white_pieces : &board->black_pieces;                       \
-  bitboard_t *remove_piece_board = &board->piece_bitboards[INDEX_COLOR_PIECE(color, piece)];                           \
+  bitboard_t *remove_piece_board = &board->piece_bitboards[index_color_piece(color, piece)];                           \
   unset_bit(*remove_color_board, square);                                                                              \
   unset_bit(board->all_pieces, square);                                                                                \
   unset_bit(*remove_piece_board, square);                                                                              \
@@ -29,7 +29,7 @@
 
 #define add_piece_sync(board, square, piece, color)                                                                    \
   bitboard_t *add_color_board = color == WHITE ? &board->white_pieces : &board->black_pieces;                          \
-  bitboard_t *add_piece_board = &board->piece_bitboards[INDEX_COLOR_PIECE(color, piece)];                              \
+  bitboard_t *add_piece_board = &board->piece_bitboards[index_color_piece(color, piece)];                              \
   set_bit(*add_color_board, square);                                                                                   \
   set_bit(board->all_pieces, square);                                                                                  \
   set_bit(*add_piece_board, square);                                                                                   \
@@ -49,7 +49,7 @@
 #define get_castle_rights_se(rights) (rights & 0b00001000)
 
 typedef struct {
-  uint8_t is_white_turn;
+  color_t turn_color;
   uint32_t rule50;
   // keep track of castle rights
   // bit 3: castle rights for white king side (South East)
