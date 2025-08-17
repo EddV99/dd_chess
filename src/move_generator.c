@@ -34,7 +34,7 @@ int generate_pseudo_legal_black_moves(board_t *board, move_t *moves) {
   return moves - tmp;
 }
 
-int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_t color) {
+int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, color_t color) {
   move_t *tmp = moves;
 
   bitboard_t pawns = board->piece_bitboards[INDEX_COLOR_PIECE(color, PAWN)];
@@ -127,7 +127,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
   return moves - tmp;
 }
 
-int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_color_t color,
+int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, color_t color,
                                        bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
@@ -156,7 +156,7 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_colo
   return moves - tmp;
 }
 
-int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_color_t color, pieces_t piece,
+int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, color_t color, pieces_t piece,
                                        bitboard_t occupancy_mask) {
   move_t *tmp = moves;
 
@@ -199,19 +199,19 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
   return moves - tmp;
 }
 
-int generate_pseudo_legal_bishop_moves(board_t *board, move_t *moves, piece_color_t color) {
+int generate_pseudo_legal_bishop_moves(board_t *board, move_t *moves, color_t color) {
   return generate_pseudo_legal_slider_moves(board, moves, color, BISHOP, board->all_pieces);
 }
 
-int generate_pseudo_legal_rook_moves(board_t *board, move_t *moves, piece_color_t color) {
+int generate_pseudo_legal_rook_moves(board_t *board, move_t *moves, color_t color) {
   return generate_pseudo_legal_slider_moves(board, moves, color, ROOK, board->all_pieces);
 }
 
-int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, piece_color_t color) {
+int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, color_t color) {
   return generate_pseudo_legal_slider_moves(board, moves, color, QUEEN, board->all_pieces);
 }
 
-int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_t color, bitboard_t can_move_to_mask) {
+int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t color, bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
   bitboard_t king = board->piece_bitboards[INDEX_COLOR_PIECE(color, KING)];
@@ -277,7 +277,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
   return moves - tmp;
 }
 
-int is_square_attacked(board_t *board, square_t square, piece_color_t attacker_color) {
+int is_square_attacked(board_t *board, square_t square, color_t attacker_color) {
   if ((attacker_color == WHITE) &&
       (pawn_attacks[BLACK][square] & board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, PAWN)]))
     return 1;
@@ -306,7 +306,7 @@ int is_square_attacked(board_t *board, square_t square, piece_color_t attacker_c
   return 0;
 }
 
-int is_king_in_check(board_t *board, piece_color_t color) {
+int is_king_in_check(board_t *board, color_t color) {
   square_t square = least_significant_one_bit(color == WHITE ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, KING)]
                                                              : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, KING)]);
   return is_square_attacked(board, square, color == WHITE ? BLACK : WHITE);

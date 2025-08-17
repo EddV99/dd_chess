@@ -43,7 +43,7 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
       (*castles)++;
     if (get_move_promotion(move))
       (*promotions)++;
-    piece_color_t old_color = board->is_white_turn ? WHITE : BLACK;
+    color_t old_color = board->is_white_turn ? WHITE : BLACK;
     make_move(board, move);
     if (is_king_in_check(board, !old_color))
       (*checks)++;

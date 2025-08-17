@@ -95,7 +95,7 @@ void make_move(board_t *board, move_t move) {
 
   pieces_t from_piece = board->pieces[from];
   pieces_t to_piece = board->pieces[to];
-  piece_color_t color = board->is_white_turn ? WHITE : BLACK;
+  color_t color = board->is_white_turn ? WHITE : BLACK;
 
   if (castle) {
     square_t rook_square_before =
@@ -138,7 +138,7 @@ void unmake_move(board_t *board, move_t move) {
   int captured = capture != EMPTY;
 
   pieces_t piece = board->pieces[to];
-  piece_color_t color = board->is_white_turn ? WHITE : BLACK;
+  color_t color = board->is_white_turn ? WHITE : BLACK;
 
   if (promotion) {
     remove_piece_sync(board, to, promotion, color);
@@ -172,7 +172,7 @@ void print_board(board_t *board) {
       if (board->pieces[sq] == EMPTY) {
         printf(". ");
       } else {
-        piece_color_t color =
+        color_t color =
             board->white_pieces & square_mask(sq) ? (DARK_MODE ? BLACK : WHITE) : (DARK_MODE ? WHITE : BLACK);
         printf("%s ", piece_to_utf8[INDEX_COLOR_PIECE(color, board->pieces[sq])]);
       }
