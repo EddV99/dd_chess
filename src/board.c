@@ -104,10 +104,10 @@ void make_move(board_t *board, move_t move) {
         color == WHITE ? ((direction_t)castle == EAST ? F1 : D1) : ((direction_t)castle == EAST ? F8 : D8);
     move_piece_sync(board, rook_square_before, rook_square_after, ROOK, color);
   } else if (en_passant) {
-    square_t captured_pawn_square = to + (8 * color == WHITE ? 1 : -1);
-    remove_piece_sync(board, captured_pawn_square, PAWN, (color == WHITE ? BLACK : WHITE));
+    square_t captured_pawn_square = to + (8 * (color == WHITE ? 1 : -1));
+    remove_piece_sync(board, captured_pawn_square, PAWN, !color);
   } else if (captured) {
-    remove_piece_sync(board, to, capture, (color == WHITE ? BLACK : WHITE));
+    remove_piece_sync(board, to, capture, !color);
   }
 
   move_piece_sync(board, from, to, (promotion ? promotion : from_piece), color);
@@ -154,10 +154,10 @@ void unmake_move(board_t *board, move_t move) {
         color == WHITE ? ((direction_t)castle == EAST ? F1 : D1) : ((direction_t)castle == EAST ? F8 : D8);
     move_piece_sync(board, rook_square_after, rook_square_before, ROOK, color);
   } else if (en_passant) {
-    square_t captured_pawn_square = to + (8 * color == WHITE ? 1 : -1);
-    add_piece_sync(board, captured_pawn_square, PAWN, (color == WHITE ? BLACK : WHITE));
+    square_t captured_pawn_square = to + (8 * (color == WHITE ? 1 : -1));
+    add_piece_sync(board, captured_pawn_square, PAWN, !color);
   } else if (captured) {
-    add_piece_sync(board, to, capture, (color == WHITE ? BLACK : WHITE));
+    add_piece_sync(board, to, capture, !color);
   }
 }
 

@@ -60,6 +60,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
 
     set_move_from(move, to + (8 * dir));
     set_move_to(move, to);
+    set_move_capture(move, EMPTY);
 
     if (square_mask(to) & promotion_rank) {
       add_move_promotion(moves, move);
@@ -73,6 +74,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
     square_t to = (square_t)least_significant_one_bit(move_up_two);
     set_move_from(move, to + (16 * dir));
     set_move_to(move, to);
+    set_move_capture(move, EMPTY);
     unset_least_significant_one_bit(move_up_two);
     add_move(moves, move);
   }
@@ -142,6 +144,8 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_colo
       move_t move = 0;
       if (board->pieces[to] != EMPTY) {
         set_move_capture(move, board->pieces[to]);
+      } else {
+        set_move_capture(move, EMPTY);
       }
       set_move_from(move, from);
       set_move_to(move, to);
@@ -183,6 +187,8 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
       move_t move = 0;
       if (board->pieces[to] != EMPTY) {
         set_move_capture(move, board->pieces[to]);
+      } else {
+        set_move_capture(move, EMPTY);
       }
       set_move_from(move, from);
       set_move_to(move, to);
@@ -218,8 +224,11 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
     square_t to = (square_t)least_significant_one_bit(attacks);
     unset_least_significant_one_bit(attacks);
     move_t move = 0;
-    if (board->pieces[to] != EMPTY)
+    if (board->pieces[to] != EMPTY){
       set_move_capture(move, board->pieces[to]);
+    } else {
+      set_move_capture(move, EMPTY);
+    }
     set_move_from(move, from);
     set_move_to(move, to);
     add_move(moves, move);
@@ -231,6 +240,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, H1);
+      set_move_capture(move, EMPTY);
       set_move_castle_east(move);
       add_move(moves, move);
     }
@@ -239,6 +249,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, A1);
+      set_move_capture(move, EMPTY);
       set_move_castle_west(move);
       add_move(moves, move);
     }
@@ -248,6 +259,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, H8);
+      set_move_capture(move, EMPTY);
       set_move_castle_east(move);
       add_move(moves, move);
     }
@@ -256,6 +268,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, A8);
+      set_move_capture(move, EMPTY);
       set_move_castle_west(move);
       add_move(moves, move);
     }
@@ -282,10 +295,10 @@ int is_square_attacked(board_t *board, square_t square, piece_color_t attacker_c
       ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, ROOK)]
                                  : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, ROOK)]))
     return 1;
-  // if (get_queen_attacks(square, board->all_pieces) &
-  //     ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, QUEEN)]
-  //                       : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, QUEEN)]))
-  //   return 1;
+  if (get_queen_attacks(square, board->all_pieces) &
+      ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, QUEEN)]
+                        : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, QUEEN)]))
+    return 1;
   if (king_attacks[square] & ((attacker_color == WHITE) ? board->piece_bitboards[INDEX_COLOR_PIECE(WHITE, KING)]
                                                         : board->piece_bitboards[INDEX_COLOR_PIECE(BLACK, KING)]))
     return 1;
