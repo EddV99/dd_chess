@@ -42,9 +42,16 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, piece_color_
   int dir = color == WHITE ? SHIFT_LEFT : SHIFT_RIGHT;
   bitboard_t promotion_rank = color == WHITE ? RANK_8 : RANK_1;
 
-  bitboard_t move_up_one = shift(dir, pawns, 8) & ~other_pieces;
-  bitboard_t move_up_two =
-      shift(dir, color == WHITE ? (move_up_one & RANK_3) : (move_up_one & RANK_6), 8) & ~other_pieces;
+  bitboard_t move_up_one = 0ULL;
+  bitboard_t move_up_two = 0ULL;
+
+  if (color == WHITE) {
+    move_up_one = (pawns << 8) & ~other_pieces;
+    move_up_two = ((move_up_one & RANK_3) << 8) & ~other_pieces;
+  } else {
+    move_up_one = (pawns >> 8) & ~other_pieces;
+    move_up_two = ((move_up_one & RANK_6) >> 8) & ~other_pieces;
+  }
 
   while (move_up_one) {
     move_t move = 0;
@@ -133,7 +140,9 @@ int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, piece_colo
       square_t to = (square_t)least_significant_one_bit(attacks);
       unset_least_significant_one_bit(attacks);
       move_t move = 0;
-      if(board->pieces[to] != EMPTY) set_move_capture(move, board->pieces[to]);
+      if (board->pieces[to] != EMPTY) {
+        set_move_capture(move, board->pieces[to]);
+      }
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
@@ -172,7 +181,9 @@ int generate_pseudo_legal_slider_moves(board_t *board, move_t *moves, piece_colo
       unset_least_significant_one_bit(attacks);
 
       move_t move = 0;
-      if(board->pieces[to] != EMPTY) set_move_capture(move, board->pieces[to]);
+      if (board->pieces[to] != EMPTY) {
+        set_move_capture(move, board->pieces[to]);
+      }
       set_move_from(move, from);
       set_move_to(move, to);
       add_move(moves, move);
@@ -207,7 +218,8 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, piece_color_
     square_t to = (square_t)least_significant_one_bit(attacks);
     unset_least_significant_one_bit(attacks);
     move_t move = 0;
-    if(board->pieces[to] != EMPTY) set_move_capture(move, board->pieces[to]);
+    if (board->pieces[to] != EMPTY)
+      set_move_capture(move, board->pieces[to]);
     set_move_from(move, from);
     set_move_to(move, to);
     add_move(moves, move);

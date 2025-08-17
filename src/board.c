@@ -107,7 +107,7 @@ void make_move(board_t *board, move_t move) {
     square_t captured_pawn_square = to + (8 * color == WHITE ? 1 : -1);
     remove_piece_sync(board, captured_pawn_square, PAWN, (color == WHITE ? BLACK : WHITE));
   } else if (captured) {
-    remove_piece_sync(board, to, to_piece, (color == WHITE ? BLACK : WHITE));
+    remove_piece_sync(board, to, capture, (color == WHITE ? BLACK : WHITE));
   }
 
   move_piece_sync(board, from, to, (promotion ? promotion : from_piece), color);

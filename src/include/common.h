@@ -33,7 +33,7 @@ typedef enum {
 } square_t;
 // clang-format on
 
-typedef enum { WHITE, BLACK } piece_color_t;
+typedef enum { WHITE = 0, BLACK } piece_color_t;
 
 typedef enum { H, G, F, E, D, C, B, A } file_t;
 
