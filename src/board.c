@@ -82,9 +82,115 @@ board_t create_new_board() {
   return new_board;
 }
 
-void make_move(board_t *board, move_t move) {}
+void make_move(board_t *board, move_t move) {
+  square_t from = get_move_from(move);
+  square_t to = get_move_to(move);
+  piece_t promotion = get_move_promotion(move);
+  int is_en_passant = get_move_en_passant(move);
+  int castle = get_move_castle(move);
 
-void unmake_move(board_t *board, move_t move) {}
+  int is_capture = board->pieces[to] != EMPTY;
+  piece_t captured_piece = is_capture ? board->pieces[to] : EMPTY;
+
+  if (is_capture) {
+    remove_piece_sync(board, to, captured_piece, !board->turn_color);
+    set_move_capture(move, captured_piece);
+  }
+
+  if (is_en_passant) {
+    square_t captured_pawn_sq = 0;
+    if (board->turn_color == WHITE) {
+      captured_pawn_sq = to - 8;
+    } else {
+      captured_pawn_sq = to + 8;
+    }
+    remove_piece_sync(board, captured_pawn_sq, PAWN, !board->turn_color);
+  }
+
+  if (castle) {
+    if (castle == EAST) {
+      if (board->turn_color == WHITE) {
+        move_piece_sync(board, H1, F1, ROOK, board->turn_color);
+      } else {
+        move_piece_sync(board, H8, F8, ROOK, board->turn_color);
+      }
+    } else {
+      if (board->turn_color == WHITE) {
+        move_piece_sync(board, A1, D1, ROOK, board->turn_color);
+      } else {
+        move_piece_sync(board, A8, D8, ROOK, board->turn_color);
+      }
+    }
+  }
+
+  piece_t from_piece = board->pieces[from];
+  if (promotion) {
+    remove_piece_sync(board, from, from_piece, board->turn_color);
+    add_piece_sync(board, to, promotion, board->turn_color);
+  } else {
+    move_piece_sync(board, from, to, from_piece, board->turn_color);
+  }
+
+  // for undo purposes
+  set_move_castle_rights(move, board->castle_rights);
+  set_move_en_passant_mask(move, least_significant_one_bit(board->en_passant));
+
+  board->turn_color = !board->turn_color;
+}
+
+void unmake_move(board_t *board, move_t move) {
+  square_t from = get_move_from(move);
+  square_t to = get_move_to(move);
+  piece_t promotion = get_move_promotion(move);
+  int is_en_passant = get_move_en_passant(move);
+  int castle = get_move_castle(move);
+
+  piece_t captured_piece = get_move_capture(move);
+  int is_capture = captured_piece != EMPTY;
+
+  board->turn_color = !board->turn_color;
+  board->castle_rights = get_move_castle_rights(move);
+  board->en_passant = square_mask(get_move_en_passant_mask(move));
+
+
+  piece_t piece = board->pieces[to];
+  if (promotion) {
+    remove_piece_sync(board, to, promotion, board->turn_color);
+    add_piece_sync(board, from, PAWN, board->turn_color);
+  } else {
+    move_piece_sync(board, to, from, piece, board->turn_color);
+  }
+
+  if (castle) {
+    if (castle == EAST) {
+      if (board->turn_color == WHITE) {
+        move_piece_sync(board, F1, H1, ROOK, board->turn_color);
+      } else {
+        move_piece_sync(board, F8, H8, ROOK, board->turn_color);
+      }
+    } else {
+      if (board->turn_color == WHITE) {
+        move_piece_sync(board, D1, A1, ROOK, board->turn_color);
+      } else {
+        move_piece_sync(board, D8, A8, ROOK, board->turn_color);
+      }
+    }
+  }
+
+  if (is_en_passant) {
+    square_t captured_pawn_sq = 0;
+    if (board->turn_color == WHITE) {
+      captured_pawn_sq = to - 8;
+    } else {
+      captured_pawn_sq = to + 8;
+    }
+    add_piece_sync(board, captured_pawn_sq, PAWN, !board->turn_color);
+  }
+
+  if (is_capture) {
+    add_piece_sync(board, to, captured_piece, !board->turn_color);
+  }
+}
 
 void print_board(board_t *board) {
   for (int rank = 7; rank >= 0; rank--) {
