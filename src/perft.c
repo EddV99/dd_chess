@@ -35,23 +35,34 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
   int count = generate_pseudo_legal_moves(board, move_list);
   for (int i = 0; i < count; i++) {
     move_t move = move_list[i];
-    if ((piece_t)get_move_capture(move) != EMPTY)
-      (*captures)++;
-    if (get_move_en_passant(move))
-      (*ep)++;
-    if (get_move_castle(move))
-      (*castles)++;
-    if (get_move_promotion(move))
-      (*promotions)++;
+
+    board_t old_board = copy_board(board);
+
     color_t old_color = board->turn_color;
-    make_move(board, move);
-    if (is_king_in_check(board, !old_color))
-      (*checks)++;
+    make_move(board, &move);
+    int valid_move = !is_king_in_check(board, old_color);
+
     if (print)
       print_board(board);
-    if (!is_king_in_check(board, old_color))
+
+    if (valid_move) {
+      if (get_move_en_passant(move))
+        (*ep)++;
+      if (get_move_castle(move))
+        (*castles)++;
+      if (get_move_promotion(move))
+        (*promotions)++;
+      if ((piece_t)get_move_capture(move) != EMPTY)
+        (*captures)++;
+      if (is_king_in_check(board, !old_color))
+        (*checks)++;
       nodes += perft(depth - 1, board, print, captures, ep, castles, promotions, checks);
+    }
     unmake_move(board, move);
+
+    if (!board_equals(&old_board, board)) {
+      printf("BAD UNMOVE\n");
+    }
   }
   return nodes;
 }

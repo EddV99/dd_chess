@@ -67,8 +67,11 @@ typedef struct {
 } board_t;
 
 board_t create_new_board();
-void make_move(board_t *board, move_t move);
+void make_move(board_t *board, move_t* move);
 void unmake_move(board_t *board, move_t move);
 void print_board(board_t *board);
+
+board_t copy_board(const board_t *board);
+int board_equals(board_t *b1, board_t *b2);
 
 #endif

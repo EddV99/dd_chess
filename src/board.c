@@ -82,19 +82,19 @@ board_t create_new_board() {
   return new_board;
 }
 
-void make_move(board_t *board, move_t move) {
-  square_t from = get_move_from(move);
-  square_t to = get_move_to(move);
-  piece_t promotion = get_move_promotion(move);
-  int is_en_passant = get_move_en_passant(move);
-  int castle = get_move_castle(move);
+void make_move(board_t *board, move_t* move) {
+  square_t from = get_move_from(*move);
+  square_t to = get_move_to(*move);
+  piece_t promotion = get_move_promotion(*move);
+  int is_en_passant = get_move_en_passant(*move);
+  int castle = get_move_castle(*move);
 
-  int is_capture = board->pieces[to] != EMPTY;
-  piece_t captured_piece = is_capture ? board->pieces[to] : EMPTY;
+  piece_t captured_piece = get_move_capture(*move);
+  int is_capture = captured_piece != EMPTY;
 
   if (is_capture) {
     remove_piece_sync(board, to, captured_piece, !board->turn_color);
-    set_move_capture(move, captured_piece);
+    set_move_capture((*move), captured_piece);
   }
 
   if (is_en_passant) {
@@ -132,8 +132,10 @@ void make_move(board_t *board, move_t move) {
   }
 
   // for undo purposes
-  set_move_castle_rights(move, board->castle_rights);
-  set_move_en_passant_mask(move, least_significant_one_bit(board->en_passant));
+  uint8_t rights = board->castle_rights;
+  uint8_t en_sq = board->en_passant ? least_significant_one_bit(board->en_passant) : 0;
+  set_move_castle_rights(*move, rights);
+  set_move_en_passant_mask(*move, en_sq);
 
   board->turn_color = !board->turn_color;
 }
@@ -150,8 +152,8 @@ void unmake_move(board_t *board, move_t move) {
 
   board->turn_color = !board->turn_color;
   board->castle_rights = get_move_castle_rights(move);
-  board->en_passant = square_mask(get_move_en_passant_mask(move));
-
+  uint8_t en_sq = get_move_en_passant_mask(move);
+  board->en_passant = en_sq ? square_mask(en_sq) : 0;
 
   piece_t piece = board->pieces[to];
   if (promotion) {
@@ -210,4 +212,69 @@ void print_board(board_t *board) {
     }
   }
   printf("\n\n   A B C D E F G H \n\n");
+}
+
+board_t copy_board(const board_t *board) {
+  board_t result = create_new_board();
+
+  result.turn_color = board->turn_color;
+  result.rule50 = board->rule50;
+  result.castle_rights = board->castle_rights;
+  for (int i = 0; i < SQUARE_COUNT; i++)
+    result.pieces[i] = board->pieces[i];
+  for (int i = 0; i < 12; i++)
+    result.piece_bitboards[i] = board->piece_bitboards[i];
+  result.all_pieces = board->all_pieces;
+  result.en_passant = board->en_passant;
+  result.black_pieces = board->black_pieces;
+  result.white_pieces = board->white_pieces;
+
+  return result;
+}
+
+int board_equals(board_t *b1, board_t *b2) {
+  if (b1->turn_color != b2->turn_color) {
+    printf("color not equal");
+    return 0;
+  }
+  if (b1->rule50 != b2->rule50) {
+    printf("rule50 not equal");
+    return 0;
+  }
+  if (b1->castle_rights != b2->castle_rights) {
+    printf("castle rights not equal\n");
+    printf("%x != %x\n", b1->castle_rights, b2->castle_rights);
+    return 0;
+  }
+  for (int i = 0; i < SQUARE_COUNT; i++) {
+    if (b1->pieces[i] != b2->pieces[i]) {
+      printf("pieces not equal");
+      return 0;
+    }
+  }
+  for (int i = 0; i < 12; i++) {
+    if (b1->piece_bitboards[i] != b2->piece_bitboards[i]) {
+      printf("piece bitboard not equal");
+      return 0;
+    }
+  }
+  if (b1->all_pieces != b2->all_pieces) {
+    printf("all pieces not equal");
+    return 0;
+  }
+  if ((b1->en_passant) != (b2->en_passant)) {
+    printf("en passant not equal\n");
+    printf("%lx != %lx\n", b1->en_passant, b2->en_passant);
+    return 0;
+  }
+  if (b1->black_pieces != b2->black_pieces) {
+    printf("black pieces not equal");
+    return 0;
+  }
+  if (b1->white_pieces != b2->white_pieces) {
+    printf("white pieces not equal");
+    return 0;
+  }
+
+  return 1;
 }
