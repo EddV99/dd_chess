@@ -127,8 +127,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, color_t colo
   return moves - tmp;
 }
 
-int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, color_t color,
-                                       bitboard_t can_move_to_mask) {
+int generate_pseudo_legal_knight_moves(board_t *board, move_t *moves, color_t color, bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
   bitboard_t knights = board->piece_bitboards[index_color_piece(color, KNIGHT)];

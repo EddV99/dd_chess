@@ -35,10 +35,10 @@
   set_bit(*add_piece_board, square);                                                                                   \
   board->pieces[square] = piece;
 
-#define set_castle_rights_nw(rights) (rights |= 1 << 0)
-#define set_castle_rights_ne(rights) (rights |= 1 << 1)
-#define set_castle_rights_sw(rights) (rights |= 1 << 2)
-#define set_castle_rights_se(rights) (rights |= 1 << 3)
+#define set_castle_rights_nw(rights) (rights |= (1 << 0))
+#define set_castle_rights_ne(rights) (rights |= (1 << 1))
+#define set_castle_rights_sw(rights) (rights |= (1 << 2))
+#define set_castle_rights_se(rights) (rights |= (1 << 3))
 #define unset_castle_rights_nw(rights) (rights &= 0b11111110)
 #define unset_castle_rights_ne(rights) (rights &= 0b11111101)
 #define unset_castle_rights_sw(rights) (rights &= 0b11111011)

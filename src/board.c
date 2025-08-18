@@ -82,84 +82,9 @@ board_t create_new_board() {
   return new_board;
 }
 
-void make_move(board_t *board, move_t move) {
-  square_t from = get_move_from(move);
-  square_t to = get_move_to(move);
-  piece_t promotion = get_move_promotion(move);
+void make_move(board_t *board, move_t move) {}
 
-  int castle = get_move_castle(move);
-  int en_passant = get_move_en_passant(move);
-
-  piece_t capture = get_move_capture(move);
-  int captured = capture != EMPTY;
-
-  piece_t from_piece = board->pieces[from];
-  piece_t to_piece = board->pieces[to];
-  color_t color = board->turn_color;
-
-  if (castle) {
-    square_t rook_square_before =
-        color == WHITE ? ((direction_t)castle == EAST ? H1 : A1) : ((direction_t)castle == EAST ? H8 : A8);
-    square_t rook_square_after =
-        color == WHITE ? ((direction_t)castle == EAST ? F1 : D1) : ((direction_t)castle == EAST ? F8 : D8);
-    move_piece_sync(board, rook_square_before, rook_square_after, ROOK, color);
-  } else if (en_passant) {
-    square_t captured_pawn_square = to + (8 * (color == WHITE ? 1 : -1));
-    remove_piece_sync(board, captured_pawn_square, PAWN, !color);
-  } else if (captured) {
-    remove_piece_sync(board, to, capture, !color);
-  }
-
-  move_piece_sync(board, from, to, (promotion ? promotion : from_piece), color);
-  set_move_old_en_passant_square(move, (square_t)least_significant_one_bit(board->en_passant));
-  board->en_passant = 0ULL;
-  if (from_piece == PAWN) {
-    if ((from & RANK_2) && (to & RANK_4)) {
-      board->en_passant = square_mask(to - 8);
-    } else if ((from & RANK_7) && (to & RANK_5)) {
-      board->en_passant = square_mask(to + 8);
-    }
-  }
-  board->turn_color = !board->turn_color;
-}
-
-void unmake_move(board_t *board, move_t move) {
-  board->turn_color = !board->turn_color;
-  board->en_passant = square_mask(get_move_old_en_passant_square(move));
-
-  square_t from = get_move_from(move);
-  square_t to = get_move_to(move);
-  piece_t promotion = get_move_promotion(move);
-
-  int castle = get_move_castle(move);
-  int en_passant = get_move_en_passant(move);
-
-  piece_t capture = get_move_capture(move);
-  int captured = capture != EMPTY;
-
-  piece_t piece = board->pieces[to];
-  color_t color = board->turn_color;
-
-  if (promotion) {
-    remove_piece_sync(board, to, promotion, color);
-    add_piece_sync(board, from, PAWN, color);
-  } else {
-    move_piece_sync(board, to, from, piece, color);
-  }
-
-  if (castle) {
-    square_t rook_square_before =
-        color == WHITE ? ((direction_t)castle == EAST ? H1 : A1) : ((direction_t)castle == EAST ? H8 : A8);
-    square_t rook_square_after =
-        color == WHITE ? ((direction_t)castle == EAST ? F1 : D1) : ((direction_t)castle == EAST ? F8 : D8);
-    move_piece_sync(board, rook_square_after, rook_square_before, ROOK, color);
-  } else if (en_passant) {
-    square_t captured_pawn_square = to + (8 * (color == WHITE ? 1 : -1));
-    add_piece_sync(board, captured_pawn_square, PAWN, !color);
-  } else if (captured) {
-    add_piece_sync(board, to, capture, !color);
-  }
-}
+void unmake_move(board_t *board, move_t move) {}
 
 void print_board(board_t *board) {
   for (int rank = 7; rank >= 0; rank--) {
