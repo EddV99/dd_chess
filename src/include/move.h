@@ -7,7 +7,8 @@
 #define unset_move_capture(move) (move = (move & 0b1111111111000111111111111111111))
 
 #define set_move_castle_rights(move, rights) ((move) = ((move) & 0b0000111111111111111111111111111) | ((rights) << 27))
-#define set_move_en_passant_mask(move, square) ((move) = ((move) & 0b1111000000111111111111111111111) | ((square) << 21))
+#define set_move_en_passant_mask(move, square)                                                                         \
+  ((move) = ((move) & 0b1111000000111111111111111111111) | ((square) << 21))
 #define set_move_capture(move, piece) ((move) = ((move) & 0b1111111111000111111111111111111) | (((piece) + 1) << 18))
 #define set_move_castle_east(move) ((move) = ((move) & 0b1111111111111001111111111111111) | (EAST << 16))
 #define set_move_castle_west(move) ((move) = ((move) & 0b1111111111111001111111111111111) | (WEST << 16))

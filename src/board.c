@@ -82,7 +82,7 @@ board_t create_new_board() {
   return new_board;
 }
 
-void make_move(board_t *board, move_t* move) {
+void make_move(board_t *board, move_t *move) {
   square_t from = get_move_from(*move);
   square_t to = get_move_to(*move);
   piece_t promotion = get_move_promotion(*move);
