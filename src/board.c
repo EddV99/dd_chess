@@ -131,11 +131,27 @@ void make_move(board_t *board, move_t *move) {
     move_piece_sync(board, from, to, from_piece, board->turn_color);
   }
 
-  // for undo purposes
-  uint8_t rights = board->castle_rights;
   uint8_t en_sq = board->en_passant ? least_significant_one_bit(board->en_passant) : 0;
-  set_move_castle_rights(*move, rights);
   set_move_en_passant_mask(*move, en_sq);
+
+  if (from_piece == PAWN) {
+    if (board->turn_color == WHITE) {
+      if ((from + 16) == to) {
+        board->en_passant = square_mask((from + 8));
+      } else {
+        board->en_passant = 0ULL;
+      }
+    } else {
+      if ((from - 16) == to) {
+        board->en_passant = square_mask((from - 8));
+      } else {
+        board->en_passant = 0ULL;
+      }
+    }
+  }
+
+  uint8_t rights = board->castle_rights;
+  set_move_castle_rights(*move, rights);
 
   board->turn_color = !board->turn_color;
 }
@@ -234,11 +250,11 @@ board_t copy_board(const board_t *board) {
 
 int board_equals(board_t *b1, board_t *b2) {
   if (b1->turn_color != b2->turn_color) {
-    printf("color not equal");
+    printf("color not equal\n");
     return 0;
   }
   if (b1->rule50 != b2->rule50) {
-    printf("rule50 not equal");
+    printf("rule50 not equal\n");
     return 0;
   }
   if (b1->castle_rights != b2->castle_rights) {
@@ -248,18 +264,18 @@ int board_equals(board_t *b1, board_t *b2) {
   }
   for (int i = 0; i < SQUARE_COUNT; i++) {
     if (b1->pieces[i] != b2->pieces[i]) {
-      printf("pieces not equal");
+      printf("pieces not equal\n");
       return 0;
     }
   }
   for (int i = 0; i < 12; i++) {
     if (b1->piece_bitboards[i] != b2->piece_bitboards[i]) {
-      printf("piece bitboard not equal");
+      printf("piece bitboard not equal\n");
       return 0;
     }
   }
   if (b1->all_pieces != b2->all_pieces) {
-    printf("all pieces not equal");
+    printf("all pieces not equal\n");
     return 0;
   }
   if ((b1->en_passant) != (b2->en_passant)) {
@@ -268,11 +284,11 @@ int board_equals(board_t *b1, board_t *b2) {
     return 0;
   }
   if (b1->black_pieces != b2->black_pieces) {
-    printf("black pieces not equal");
+    printf("black pieces not equal\n");
     return 0;
   }
   if (b1->white_pieces != b2->white_pieces) {
-    printf("white pieces not equal");
+    printf("white pieces not equal\n");
     return 0;
   }
 

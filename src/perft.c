@@ -62,6 +62,13 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
 
     if (!board_equals(&old_board, board)) {
       printf("BAD UNMOVE\n");
+      printf("Move: %b\n", move);
+      print_bitboard(old_board.en_passant);
+      printf("Old Board\n");
+      print_board(&old_board);
+      print_bitboard(board->en_passant);
+      printf("Board\n");
+      print_board(board);
     }
   }
   return nodes;

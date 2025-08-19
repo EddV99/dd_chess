@@ -84,7 +84,8 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, color_t colo
     unset_least_significant_one_bit(pawns);
     // TODO: implement en passant
     bitboard_t attacks = pawn_attacks[color][from] & (color == WHITE ? board->black_pieces : board->white_pieces);
-    bitboard_t en_passant_attack = pawn_attacks[color][from] & (board->en_passant);
+    bitboard_t en_passant_attack =
+        (pawn_attacks[color][from] & (board->en_passant) & (color == WHITE ? ~RANK_3 : ~RANK_6));
 
     if (en_passant_attack) {
       square_t attack_to = (square_t)least_significant_one_bit(en_passant_attack);
@@ -92,7 +93,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, color_t colo
       set_move_en_passant(move);
       set_move_from(move, from);
       set_move_to(move, attack_to);
-
+      set_move_capture(move, EMPTY);
       add_move(moves, move);
     }
 
