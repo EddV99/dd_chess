@@ -134,18 +134,15 @@ void make_move(board_t *board, move_t *move) {
   uint8_t en_sq = board->en_passant ? least_significant_one_bit(board->en_passant) : 0;
   set_move_en_passant_mask(*move, en_sq);
 
+  board->en_passant = 0ULL;
   if (from_piece == PAWN) {
     if (board->turn_color == WHITE) {
       if ((from + 16) == to) {
         board->en_passant = square_mask((from + 8));
-      } else {
-        board->en_passant = 0ULL;
       }
     } else {
       if ((from - 16) == to) {
         board->en_passant = square_mask((from - 8));
-      } else {
-        board->en_passant = 0ULL;
       }
     }
   }

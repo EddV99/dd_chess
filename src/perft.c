@@ -46,16 +46,21 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
       print_board(board);
 
     if (valid_move) {
-      if (get_move_en_passant(move))
-        (*ep)++;
-      if (get_move_castle(move))
-        (*castles)++;
-      if (get_move_promotion(move))
-        (*promotions)++;
-      if ((piece_t)get_move_capture(move) != EMPTY)
-        (*captures)++;
-      if (is_king_in_check(board, !old_color))
-        (*checks)++;
+      if (depth == 1) {
+        if (get_move_en_passant(move)) {
+          (*ep)++;
+          (*captures)++;
+        }
+        if (get_move_castle(move))
+          (*castles)++;
+        if (get_move_promotion(move))
+          (*promotions)++;
+        if (((piece_t)get_move_capture(move)) != EMPTY)
+          (*captures)++;
+        if (is_king_in_check(board, !old_color) && depth == 1)
+          (*checks)++;
+      }
+
       nodes += perft(depth - 1, board, print, captures, ep, castles, promotions, checks);
     }
     unmake_move(board, move);
