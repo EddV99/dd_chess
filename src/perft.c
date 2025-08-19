@@ -12,8 +12,8 @@ void perft_report() {
   printf("=========================================================================================\n");
 
   int start = 0;
-  int end = 5;
-  int depths[] = {0, 1, 2, 3, 4, 5, 6};
+  int end = 4;
+  int depths[] = {0, 1, 2, 3, 4, 5, 6, 7};
   int print_boards = 0;
   for (int i = start; i <= end; i++) {
     board_t board = create_new_board();
@@ -68,10 +68,8 @@ uint64_t perft(int depth, board_t *board, int print, uint64_t *captures, uint64_
     if (!board_equals(&old_board, board)) {
       printf("BAD UNMOVE\n");
       printf("Move: %b\n", move);
-      print_bitboard(old_board.en_passant);
       printf("Old Board\n");
       print_board(&old_board);
-      print_bitboard(board->en_passant);
       printf("Board\n");
       print_board(board);
     }

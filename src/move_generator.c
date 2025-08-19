@@ -38,7 +38,7 @@ int generate_pseudo_legal_pawn_moves(board_t *board, move_t *moves, color_t colo
   move_t *tmp = moves;
 
   bitboard_t pawns = board->piece_bitboards[index_color_piece(color, PAWN)];
-  bitboard_t other_pieces = board->all_pieces & ~pawns;
+  bitboard_t other_pieces = board->all_pieces;
   int dir = color == WHITE ? SHIFT_LEFT : SHIFT_RIGHT;
   bitboard_t promotion_rank = color == WHITE ? RANK_8 : RANK_1;
 
@@ -234,8 +234,9 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
     add_move(moves, move);
   }
 
+  bitboard_t empty_space = ~board->all_pieces;
   if (color == WHITE) {
-    if (((CASTLE_SOUTH_EAST_MASK & can_move_to_mask) == CASTLE_SOUTH_EAST_MASK) &&
+    if (((CASTLE_SOUTH_EAST_MASK & empty_space) == CASTLE_SOUTH_EAST_MASK) &&
         get_castle_rights_se(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
@@ -244,7 +245,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
       set_move_castle_east(move);
       add_move(moves, move);
     }
-    if (((CASTLE_SOUTH_WEST_MASK & can_move_to_mask) == CASTLE_SOUTH_WEST_MASK) &&
+    if (((CASTLE_SOUTH_WEST_MASK & empty_space) == CASTLE_SOUTH_WEST_MASK) &&
         get_castle_rights_sw(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
@@ -254,7 +255,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
       add_move(moves, move);
     }
   } else {
-    if (((CASTLE_NORTH_EAST_MASK & can_move_to_mask) == CASTLE_NORTH_EAST_MASK) &&
+    if (((CASTLE_NORTH_EAST_MASK & empty_space) == CASTLE_NORTH_EAST_MASK) &&
         get_castle_rights_ne(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
@@ -263,7 +264,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
       set_move_castle_east(move);
       add_move(moves, move);
     }
-    if (((CASTLE_NORTH_WEST_MASK & can_move_to_mask) == CASTLE_NORTH_WEST_MASK) &&
+    if (((CASTLE_NORTH_WEST_MASK & empty_space) == CASTLE_NORTH_WEST_MASK) &&
         get_castle_rights_nw(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
