@@ -238,7 +238,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
         get_castle_rights_se(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
-      set_move_to(move, H1);
+      set_move_to(move, G1);
       set_move_capture(move, EMPTY);
       set_move_castle_east(move);
       add_move(moves, move);
@@ -247,7 +247,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
         get_castle_rights_sw(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
-      set_move_to(move, A1);
+      set_move_to(move, C1);
       set_move_capture(move, EMPTY);
       set_move_castle_west(move);
       add_move(moves, move);
@@ -257,7 +257,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
         get_castle_rights_ne(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
-      set_move_to(move, H8);
+      set_move_to(move, G8);
       set_move_capture(move, EMPTY);
       set_move_castle_east(move);
       add_move(moves, move);
@@ -266,7 +266,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
         get_castle_rights_nw(board->castle_rights)) {
       move_t move = 0;
       set_move_from(move, from);
-      set_move_to(move, A8);
+      set_move_to(move, C8);
       set_move_capture(move, EMPTY);
       set_move_castle_west(move);
       add_move(moves, move);
