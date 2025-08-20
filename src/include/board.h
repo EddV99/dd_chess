@@ -35,14 +35,14 @@
   set_bit(*add_piece_board, square);                                                                                   \
   board->pieces[square] = piece;
 
-#define set_castle_rights_nw(rights) (rights |= (1 << 0))
-#define set_castle_rights_ne(rights) (rights |= (1 << 1))
-#define set_castle_rights_sw(rights) (rights |= (1 << 2))
-#define set_castle_rights_se(rights) (rights |= (1 << 3))
-#define unset_castle_rights_nw(rights) (rights &= 0b11111110)
-#define unset_castle_rights_ne(rights) (rights &= 0b11111101)
-#define unset_castle_rights_sw(rights) (rights &= 0b11111011)
-#define unset_castle_rights_se(rights) (rights &= 0b11110111)
+#define set_castle_rights_nw(rights) ((rights) |= (1 << 0))
+#define set_castle_rights_ne(rights) ((rights) |= (1 << 1))
+#define set_castle_rights_sw(rights) ((rights) |= (1 << 2))
+#define set_castle_rights_se(rights) ((rights) |= (1 << 3))
+#define unset_castle_rights_nw(rights) ((rights) &= 0b11111110)
+#define unset_castle_rights_ne(rights) ((rights) &= 0b11111101)
+#define unset_castle_rights_sw(rights) ((rights) &= 0b11111011)
+#define unset_castle_rights_se(rights) ((rights) &= 0b11110111)
 #define get_castle_rights_nw(rights) (rights & 0b00000001)
 #define get_castle_rights_ne(rights) (rights & 0b00000010)
 #define get_castle_rights_sw(rights) (rights & 0b00000100)
@@ -67,6 +67,7 @@ typedef struct {
 } board_t;
 
 board_t create_new_board();
+board_t load_fen(const char *fen);
 void make_move(board_t *board, move_t *move);
 void unmake_move(board_t *board, move_t move);
 void print_board(board_t *board);

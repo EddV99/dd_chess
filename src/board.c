@@ -3,6 +3,7 @@
 #include "move.h"
 
 #include <stdio.h>
+#include <string.h>
 
 board_t create_new_board() {
   board_t new_board = {
@@ -80,6 +81,158 @@ board_t create_new_board() {
 
   new_board.all_pieces = new_board.white_pieces | new_board.black_pieces;
   return new_board;
+}
+
+board_t load_fen(const char *fen) {
+  int stage = 0;
+  board_t result = {
+      .turn_color = WHITE,
+      .castle_rights = 0,
+      .piece_bitboards[index_color_piece(WHITE, KING)] = 0ULL,
+      .piece_bitboards[index_color_piece(WHITE, QUEEN)] = 0ULL,
+      .piece_bitboards[index_color_piece(WHITE, ROOK)] = 0ULL,
+      .piece_bitboards[index_color_piece(WHITE, BISHOP)] = 0ULL,
+      .piece_bitboards[index_color_piece(WHITE, KNIGHT)] = 0ULL,
+      .piece_bitboards[index_color_piece(WHITE, PAWN)] = 0ULL,
+      .white_pieces = 0ULL,
+      .piece_bitboards[index_color_piece(BLACK, KING)] = 0ULL,
+      .piece_bitboards[index_color_piece(BLACK, QUEEN)] = 0ULL,
+      .piece_bitboards[index_color_piece(BLACK, ROOK)] = 0ULL,
+      .piece_bitboards[index_color_piece(BLACK, BISHOP)] = 0ULL,
+      .piece_bitboards[index_color_piece(BLACK, KNIGHT)] = 0ULL,
+      .piece_bitboards[index_color_piece(BLACK, PAWN)] = 0ULL,
+      .black_pieces = 0ULL,
+      .all_pieces = 0ULL,
+      .en_passant = 0ULL,
+      .pieces = {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                 EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+  };
+
+  rank_t rank = EIGHT;
+  file_t file = A;
+  file_t ep_file = A;
+
+  for (size_t i = 0; i < strlen(fen); i++) {
+    char ch = fen[i];
+
+    if (ch == ' ') {
+      stage++;
+      continue;
+    }
+
+    switch (stage) {
+    case 0:
+      square_t sq = file_rank_to_square(file, rank);
+      if (ch == '/') {
+        rank--;
+        file = A;
+      } else if (ch == 'P') {
+        add_piece_sync((&result), sq, PAWN, WHITE);
+        file--;
+      } else if (ch == 'N') {
+        add_piece_sync((&result), sq, KNIGHT, WHITE);
+        file--;
+      } else if (ch == 'B') {
+        add_piece_sync((&result), sq, BISHOP, WHITE);
+        file--;
+      } else if (ch == 'R') {
+        add_piece_sync((&result), sq, ROOK, WHITE);
+        file--;
+      } else if (ch == 'Q') {
+        add_piece_sync((&result), sq, QUEEN, WHITE);
+        file--;
+      } else if (ch == 'K') {
+        add_piece_sync((&result), sq, KING, WHITE);
+        file--;
+      } else if (ch == 'p') {
+        add_piece_sync((&result), sq, PAWN, BLACK);
+        file--;
+      } else if (ch == 'n') {
+        add_piece_sync((&result), sq, KNIGHT, BLACK);
+        file--;
+      } else if (ch == 'b') {
+        add_piece_sync((&result), sq, BISHOP, BLACK);
+        file--;
+      } else if (ch == 'r') {
+        add_piece_sync((&result), sq, ROOK, BLACK);
+        file--;
+      } else if (ch == 'q') {
+        add_piece_sync((&result), sq, QUEEN, BLACK);
+        file--;
+      } else if (ch == 'k') {
+        add_piece_sync((&result), sq, KING, BLACK);
+        file--;
+      } else if (ch == '1') {
+        file -= 1;
+      } else if (ch == '2') {
+        file -= 2;
+      } else if (ch == '3') {
+        file -= 3;
+      } else if (ch == '4') {
+        file -= 4;
+      } else if (ch == '5') {
+        file -= 5;
+      } else if (ch == '6') {
+        file -= 6;
+      } else if (ch == '7') {
+        file -= 7;
+      } else if (ch == '8') {
+        file -= 8;
+      }
+      break;
+    case 1:
+      if (ch == 'w') {
+        result.turn_color = WHITE;
+      } else if ('b') {
+        result.turn_color = BLACK;
+      }
+      break;
+    case 2:
+      if (ch == 'K') {
+        set_castle_rights_se(result.castle_rights);
+      } else if (ch == 'Q') {
+        set_castle_rights_sw(result.castle_rights);
+      } else if (ch == 'k') {
+        set_castle_rights_ne(result.castle_rights);
+      } else if (ch == 'q') {
+        set_castle_rights_nw(result.castle_rights);
+      }
+      break;
+    case 3:
+      if (ch == 'a') {
+        ep_file = A;
+      } else if (ch == 'b') {
+        ep_file = B;
+      } else if (ch == 'c') {
+        ep_file = C;
+      } else if (ch == 'd') {
+        ep_file = D;
+      } else if (ch == 'e') {
+        ep_file = E;
+      } else if (ch == 'f') {
+        ep_file = F;
+      } else if (ch == 'g') {
+        ep_file = G;
+      } else if (ch == 'h') {
+        ep_file = H;
+      } else if(ch == '3') {
+        square_t ep_sq = file_rank_to_square(ep_file, THREE);
+        result.en_passant = square_mask(ep_sq);
+      } else if(ch == '6') {
+        square_t ep_sq = file_rank_to_square(ep_file, SIX);
+        result.en_passant = square_mask(ep_sq);
+      }
+      break;
+    case 4:
+      break;
+    case 5:
+      break;
+    }
+  }
+  return result;
 }
 
 void make_move(board_t *board, move_t *move) {
