@@ -218,10 +218,10 @@ board_t load_fen(const char *fen) {
         ep_file = G;
       } else if (ch == 'h') {
         ep_file = H;
-      } else if(ch == '3') {
+      } else if (ch == '3') {
         square_t ep_sq = file_rank_to_square(ep_file, THREE);
         result.en_passant = square_mask(ep_sq);
-      } else if(ch == '6') {
+      } else if (ch == '6') {
         square_t ep_sq = file_rank_to_square(ep_file, SIX);
         result.en_passant = square_mask(ep_sq);
       }
@@ -302,6 +302,30 @@ void make_move(board_t *board, move_t *move) {
 
   uint8_t rights = board->castle_rights;
   set_move_castle_rights(*move, rights);
+
+  if (from_piece == ROOK) {
+    if (from == A1) {
+      unset_castle_rights_sw(board->castle_rights);
+    }
+    if (from == H1) {
+      unset_castle_rights_se(board->castle_rights);
+    }
+    if (from == A8) {
+      unset_castle_rights_nw(board->castle_rights);
+    }
+    if (from == H8) {
+      unset_castle_rights_ne(board->castle_rights);
+    }
+  } else if (from_piece == KING) {
+    if (from == E1) {
+      unset_castle_rights_sw(board->castle_rights);
+      unset_castle_rights_se(board->castle_rights);
+    }
+    if (from == E8) {
+      unset_castle_rights_nw(board->castle_rights);
+      unset_castle_rights_ne(board->castle_rights);
+    }
+  }
 
   board->turn_color = !board->turn_color;
 }

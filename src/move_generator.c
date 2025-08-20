@@ -211,6 +211,29 @@ int generate_pseudo_legal_queen_moves(board_t *board, move_t *moves, color_t col
   return generate_pseudo_legal_slider_moves(board, moves, color, QUEEN, board->all_pieces);
 }
 
+int castle_squares_attacked(board_t *board, direction_t dir) {
+  color_t color = board->turn_color;
+
+  if (dir == EAST) {
+    if (color == WHITE) {
+      return is_square_attacked(board, F1, !color) || is_square_attacked(board, G1, !color) ||
+             is_square_attacked(board, E1, !color);
+    } else {
+      return is_square_attacked(board, F8, !color) || is_square_attacked(board, G8, !color) ||
+             is_square_attacked(board, E8, !color);
+    }
+  } else if (dir == WEST) {
+    if (color == WHITE) {
+      return is_square_attacked(board, B1, !color) || is_square_attacked(board, C1, !color) ||
+             is_square_attacked(board, D1, !color) || is_square_attacked(board, E1, !color);
+    } else {
+      return is_square_attacked(board, B8, !color) || is_square_attacked(board, C8, !color) ||
+             is_square_attacked(board, D8, !color) || is_square_attacked(board, E8, !color);
+    }
+  }
+  return 0;
+}
+
 int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t color, bitboard_t can_move_to_mask) {
   move_t *tmp = moves;
 
@@ -237,7 +260,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
   bitboard_t empty_space = ~board->all_pieces;
   if (color == WHITE) {
     if (((CASTLE_SOUTH_EAST_MASK & empty_space) == CASTLE_SOUTH_EAST_MASK) &&
-        get_castle_rights_se(board->castle_rights)) {
+        get_castle_rights_se(board->castle_rights) && !castle_squares_attacked(board, EAST)) {
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, G1);
@@ -246,7 +269,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
       add_move(moves, move);
     }
     if (((CASTLE_SOUTH_WEST_MASK & empty_space) == CASTLE_SOUTH_WEST_MASK) &&
-        get_castle_rights_sw(board->castle_rights)) {
+        get_castle_rights_sw(board->castle_rights) && !castle_squares_attacked(board, WEST)) {
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, C1);
@@ -256,7 +279,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
     }
   } else {
     if (((CASTLE_NORTH_EAST_MASK & empty_space) == CASTLE_NORTH_EAST_MASK) &&
-        get_castle_rights_ne(board->castle_rights)) {
+        get_castle_rights_ne(board->castle_rights) && !castle_squares_attacked(board, EAST)) {
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, G8);
@@ -265,7 +288,7 @@ int generate_pseudo_legal_king_moves(board_t *board, move_t *moves, color_t colo
       add_move(moves, move);
     }
     if (((CASTLE_NORTH_WEST_MASK & empty_space) == CASTLE_NORTH_WEST_MASK) &&
-        get_castle_rights_nw(board->castle_rights)) {
+        get_castle_rights_nw(board->castle_rights) && !castle_squares_attacked(board, WEST)) {
       move_t move = 0;
       set_move_from(move, from);
       set_move_to(move, C8);

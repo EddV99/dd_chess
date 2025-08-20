@@ -12,8 +12,8 @@ void perft_report() {
   printf("=========================================================================================\n");
 
   int start = 0;
-  int end = 4;
-  int depths[] = {0, 1, 2, 3, 4, 5, 6, 7};
+  int end = 6;
+  int depths[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
   int print_boards = 0;
   for (int i = start; i <= end; i++) {
     board_t board = create_new_board();
